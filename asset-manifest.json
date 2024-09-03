@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/wonderlandsoftware/static/css/main.0c6fd4fb.css",
+    "main.js": "/wonderlandsoftware/static/js/main.720cbc85.js",
+    "static/js/453.e16cab5b.chunk.js": "/wonderlandsoftware/static/js/453.e16cab5b.chunk.js",
+    "index.html": "/wonderlandsoftware/index.html",
+    "main.0c6fd4fb.css.map": "/wonderlandsoftware/static/css/main.0c6fd4fb.css.map",
+    "main.720cbc85.js.map": "/wonderlandsoftware/static/js/main.720cbc85.js.map",
+    "453.e16cab5b.chunk.js.map": "/wonderlandsoftware/static/js/453.e16cab5b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0c6fd4fb.css",
+    "static/js/main.720cbc85.js"
+  ]
+}
