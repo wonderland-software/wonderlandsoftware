@@ -1,38 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  font-family: "Playfair Display", serif;
+  min-height: 100vh;
+  background-color: #fdfdff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
-.App-link {
-  color: #61dafb;
+h1 {
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.sprite-container {
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
 }
+
+.rabbit-container {
+  width: 64px;  /* Adjust based on your sprite size */
+  height: 64px; /* Adjust based on your sprite size */
+  margin-top: 20px;
+  overflow: visible; /* Allow the sprite to overflow its container */
+}
+
+.rabbit-sprite {
+  width: 64px;  /* Adjust based on your sprite size */
+  height: 64px; /* Adjust based on your sprite size */
+  background-repeat: no-repeat;
+  background-size: 256px 384px; /* 4 columns * 64px, 6 rows * 64px */
+  image-rendering: pixelated;
+  transform-origin: center bottom; /* This ensures scaling doesn't cut off the bottom */
+  transition: transform 0.15s ease-in-out; /* Add smooth transition between frames */
+  transform: scale(3); /* Scale up the sprite */
+}
+
+/* Keep any other existing styles you want to retain */
