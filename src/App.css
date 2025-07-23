@@ -209,9 +209,11 @@ h1 {
     0 8px 32px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
   
-  /* Snappier performance optimizations */
-  will-change: transform;
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  /* Enhanced performance optimizations for variable refresh rates */
+  will-change: transform, box-shadow;
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
   
   /* Subtle texture for glass effect */
@@ -236,9 +238,9 @@ h1 {
 
 /* Snappier hover state */
 .service-card:hover {
-  transform: translateY(-6px);
+  transform: translate3d(0, -6px, 0);
   box-shadow: 
-    0 16px 32px rgba(0, 0, 0, 0.18),
+    0 16px 32px rgba(0, 0, 0, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
@@ -258,14 +260,15 @@ h1 {
 
 /* Snappier icon animation */
 .service-card:hover .service-icon {
-  transform: scale(1.08);
+  transform: translate3d(0, 0, 0) scale3d(1.06, 1.06, 1);
 }
 
 .service-icon {
   font-size: 3rem;
   margin-bottom: 1.5rem;
   display: block;
-  transition: transform 0.15s ease-out;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
   position: relative;
   z-index: 2;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
@@ -338,9 +341,11 @@ h1 {
     0 8px 32px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
   
-  /* Performance optimizations */
-  will-change: transform;
-  transition: all 0.15s ease-out;
+  /* Enhanced performance optimizations for variable refresh rates */
+  will-change: transform, box-shadow;
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   cursor: pointer;
   overflow: hidden;
   display: flex;
@@ -364,9 +369,9 @@ h1 {
 }
 
 .project-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translate3d(0, -6px, 0);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.2),
+    0 16px 32px rgba(0, 0, 0, 0.16),
     inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
@@ -381,7 +386,8 @@ h1 {
 
 .project-icon {
   font-size: 2.5rem;
-  transition: transform 0.15s ease-out;
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -397,16 +403,18 @@ h1 {
   background: rgba(255, 255, 255, 0.9);
   padding: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .project-card:hover .project-icon {
-  transform: scale(1.1);
+  transform: translate3d(0, 0, 0) scale3d(1.08, 1.08, 1);
 }
 
 .project-card:hover .project-logo {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transform: translate3d(0, 0, 0) scale3d(1.08, 1.08, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
 }
 
 .project-category {
@@ -461,6 +469,20 @@ h1 {
 
 .project-card:hover .project-link {
   color: white;
+}
+
+/* High refresh rate display optimization */
+@media (min-resolution: 120dpi) and (min-device-pixel-ratio: 1.5) {
+  .service-card,
+  .project-card {
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  .service-icon,
+  .project-icon,
+  .project-logo {
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+  }
 }
 
 /* Responsive Design */
