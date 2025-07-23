@@ -1,15 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.d20aa36e.css",
-    "main.js": "/static/js/main.5dfcc283.js",
+    "main.css": "/static/css/main.919d030f.css",
+    "main.js": "/static/js/main.5a6e6c1a.js",
     "static/js/453.e16cab5b.chunk.js": "/static/js/453.e16cab5b.chunk.js",
+    "static/media/GearRoomLogo.PNG": "/static/media/GearRoomLogo.fa2a2c8c3b9e71ecd597.PNG",
+    "static/media/socallogo.jpg": "/static/media/socallogo.d05edf92217ab60eccba.jpg",
+    "static/media/mfj_logo_blk.png": "/static/media/mfj_logo_blk.85b1f2b180b6d1652806.png",
+    "static/media/tapinlogo.png": "/static/media/tapinlogo.ebda05766846dc7d5195.png",
     "index.html": "/index.html",
-    "main.d20aa36e.css.map": "/static/css/main.d20aa36e.css.map",
-    "main.5dfcc283.js.map": "/static/js/main.5dfcc283.js.map",
+    "main.919d030f.css.map": "/static/css/main.919d030f.css.map",
+    "main.5a6e6c1a.js.map": "/static/js/main.5a6e6c1a.js.map",
     "453.e16cab5b.chunk.js.map": "/static/js/453.e16cab5b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d20aa36e.css",
-    "static/js/main.5dfcc283.js"
+    "static/css/main.919d030f.css",
+    "static/js/main.5a6e6c1a.js"
   ]
 }
