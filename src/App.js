@@ -14,25 +14,50 @@ import socalLogo from "./assets/socallogo.jpg";
 
 function App() {
   const [frame, setFrame] = useState(0);
+  const [direction, setDirection] = useState(1); // 1 for forward, -1 for backward
   const requestRef = useRef();
   const previousTimeRef = useRef();
 
-  const totalFrames = 24; // Adjust this if your sprite has a different number of frames
+  const totalFrames = 23; // Removed blank frame (was 24, now 23)
 
-  const animate = useCallback((time) => {
-    if (previousTimeRef.current !== undefined) {
-      const deltaTime = time - previousTimeRef.current;
+  const animate = useCallback(
+    (time) => {
+      if (previousTimeRef.current !== undefined) {
+        const deltaTime = time - previousTimeRef.current;
 
-      // Update frame every 150ms
-      if (deltaTime > 150) {
-        setFrame((prevFrame) => (prevFrame + 1) % totalFrames);
+        // Update frame every 150ms
+        if (deltaTime > 150) {
+          setFrame((prevFrame) => {
+            const nextFrame = prevFrame + direction;
+
+            // If we hit the end going forward, switch to backward
+            if (nextFrame >= totalFrames - 1) {
+              setDirection(-1);
+              return totalFrames - 1;
+            }
+            // If we hit the beginning going backward, switch to forward
+            else if (nextFrame <= 0) {
+              setDirection(1);
+              return 0;
+            }
+
+            // Skip running sequence and frame 8 when going backward
+            // When going backward from 15, jump directly to 7
+            if (direction === -1 && prevFrame === 15) {
+              return 7;
+            }
+
+            return nextFrame;
+          });
+          previousTimeRef.current = time;
+        }
+      } else {
         previousTimeRef.current = time;
       }
-    } else {
-      previousTimeRef.current = time;
-    }
-    requestRef.current = requestAnimationFrame(animate);
-  }, []);
+      requestRef.current = requestAnimationFrame(animate);
+    },
+    [direction, totalFrames]
+  );
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
@@ -129,15 +154,18 @@ function App() {
           Request a Quote
         </a>
 
-        <div className="services-grid">
-          {services.map((service, index) => (
-            <div key={index} className="service-card">
-              <div className="service-icon">{service.icon}</div>
-              <h3 className="service-title">{service.title}</h3>
-              <p className="service-description">{service.description}</p>
-            </div>
-          ))}
-        </div>
+        <section className="services-section">
+          <h2 className="services-heading">Services</h2>
+          <div className="services-grid">
+            {services.map((service, index) => (
+              <div key={index} className="service-card">
+                <div className="service-icon">{service.icon}</div>
+                <h3 className="service-title">{service.title}</h3>
+                <p className="service-description">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section className="projects-section">
           <h2 className="projects-heading">Featured Projects</h2>
