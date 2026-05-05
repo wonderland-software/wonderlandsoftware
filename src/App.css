@@ -1,715 +1,298 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-body {
-  background: #f8faff;
+:root {
+  --paper: #ffffff;
+  --ink: #000000;
+  --ink-soft: #1a1a1a;
+  --muted: #767676;
+  --line: rgba(0, 0, 0, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: radial-gradient(
+    ellipse 140% 95% at 50% 22%,
+    #ffffff 0%,
+    #fafafa 55%,
+    #ededed 100%
+  );
+  background-attachment: fixed;
+}
+
+html, body {
+  color: var(--ink);
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .App {
-  text-align: center;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   min-height: 100vh;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  color: var(--ink);
+  position: relative;
+  /* Full-page mask reveal — one sweep for everything */
+  -webkit-mask-image: linear-gradient(
+    to right, black 0%, black 63%, transparent 70%, transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right, black 0%, black 63%, transparent 70%, transparent 100%
+  );
+  -webkit-mask-size: 300% 100%;
+  mask-size: 300% 100%;
+  animation: mask-wipe 1.3s cubic-bezier(0.4, 0, 0.6, 1) 0.1s both;
+}
+
+/* Sweep glow overlay — masked by parent so it fades at the leading edge */
+.App::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    transparent 28%,
+    rgba(168, 216, 255, 0.10) 42%,
+    rgba(255, 255, 255, 0.26) 50%,
+    rgba(168, 216, 255, 0.10) 58%,
+    transparent 72%,
+    transparent 100%
+  );
+  z-index: 9999;
+  animation: sweep-lead 1.3s cubic-bezier(0.4, 0, 0.6, 1) 0.1s both;
+}
+
+/* Editorial page — single column, left-aligned, like a letter */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
   position: relative;
 }
 
-.App::before {
-  content: '';
-  position: fixed;
-  top: 0;
+.wordmark {
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-bottom: 3.5rem;
+}
+
+/* Hero title — container that pretext lays out into */
+.hero-title {
+  position: relative;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  color: var(--ink);
+  font-weight: 700;
+  /* font-size / line-height / letter-spacing set inline from layout */
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.title-line {
+  position: absolute;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 15% 85%, rgba(120, 119, 198, 0.6) 0%, transparent 50%),
-    radial-gradient(circle at 85% 15%, rgba(100, 150, 255, 0.5) 0%, transparent 50%),
-    radial-gradient(circle at 45% 35%, rgba(120, 219, 255, 0.6) 0%, transparent 45%),
-    radial-gradient(circle at 65% 75%, rgba(255, 200, 120, 0.5) 0%, transparent 40%),
-    radial-gradient(circle at 25% 50%, rgba(180, 255, 180, 0.4) 0%, transparent 45%),
-    radial-gradient(circle at 75% 60%, rgba(150, 120, 255, 0.4) 0%, transparent 40%),
-    linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%),
-    linear-gradient(-45deg, transparent 30%, rgba(200, 200, 255, 0.2) 50%, transparent 70%);
-  pointer-events: none;
-  z-index: -1;
+  white-space: nowrap;
+  overflow: visible;
 }
 
-/* Add floating geometric shapes for more depth */
-.App::after {
-  content: '';
-  position: fixed;
+.title-fallback {
+  display: inline-block;
+  font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+  line-height: 1;
+}
+
+.rabbit-abs {
+  position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: 
-    radial-gradient(circle at 30% 20%, rgba(100, 150, 255, 0.3) 0%, transparent 25%),
-    radial-gradient(circle at 70% 80%, rgba(120, 180, 255, 0.25) 0%, transparent 30%),
-    radial-gradient(circle at 20% 60%, rgba(150, 255, 150, 0.3) 0%, transparent 20%),
-    radial-gradient(circle at 80% 40%, rgba(255, 200, 100, 0.3) 0%, transparent 25%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.App-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: rgb(0, 0, 0);
-  z-index: 1;
-}
-
-h1 {
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.sprite-container {
-  background-repeat: no-repeat;
-  image-rendering: pixelated;
-}
-
-.rabbit-container {
-  width: 64px;  /* Adjust based on your sprite size */
-  height: 64px; /* Adjust based on your sprite size */
-  margin-top: 20px;
-  overflow: visible; /* Allow the sprite to overflow its container */
+  right: 0;
+  overflow: hidden;
 }
 
 .rabbit-sprite {
-  width: 64px;  /* Adjust based on your sprite size */
-  height: 64px; /* Adjust based on your sprite size */
-  background-repeat: no-repeat;
-  background-size: 256px 384px; /* 4 columns * 64px, 6 rows * 64px */
-  image-rendering: pixelated;
-  transform-origin: center bottom; /* This ensures scaling doesn't cut off the bottom */
-  transition: transform 0.15s ease-in-out; /* Add smooth transition between frames */
-  transform: scale(3); /* Scale up the sprite */
-}
-
-.email-button {
-  margin-top: 2rem;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  color: white;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  border-radius: 50px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  
-  /* Modern glass button effect */
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  
-  /* Smooth transitions */
-  transition: all 0.2s ease-out;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Glass highlight for button */
-.email-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, 
-    rgba(255, 255, 255, 0.4) 0%,
-    transparent 100%
-  );
-  border-radius: 50px 50px 0 0;
-  pointer-events: none;
-}
-
-.email-button:hover {
-  transform: translateY(-2px) scale(1.05);
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 
-    0 12px 40px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.email-button:active {
-  transform: translateY(0) scale(1.02);
-  box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.7);
-}
-
-.email-icon {
-  font-size: 1.2rem;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-/* Optimized Glass Service Cards */
-.services-section {
-  width: 100%;
-  max-width: 1200px;
-  margin-top: 2rem;
-  padding: 0 2rem;
-}
-
-.services-heading {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  margin-bottom: 3rem;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-
-.service-card {
-  position: relative;
-  padding: 2.5rem 2rem;
-  border-radius: 20px;
-  
-  /* Enhanced glass background */
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  
-  /* Glass-like border and shadow */
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  
-  /* Enhanced performance optimizations for variable refresh rates */
-  will-change: transform, box-shadow;
-  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  cursor: pointer;
-  
-  /* Subtle texture for glass effect */
-  overflow: hidden;
-}
-
-/* Single glass highlight overlay */
-.service-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, 
-    rgba(255, 255, 255, 0.4) 0%,
-    transparent 100%
-  );
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
-}
-
-/* Snappier hover state */
-.service-card:hover {
-  transform: translate3d(0, -6px, 0);
-  box-shadow: 
-    0 16px 32px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-/* Touch-friendly mobile interactions */
-@media (hover: none) and (pointer: coarse) {
-  .service-card:active {
-    transform: translateY(-2px) scale(0.98);
-    box-shadow: 
-      0 8px 16px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  }
-  
-  .service-card:active .service-icon {
-    transform: scale(1.02);
-  }
-}
-
-/* Snappier icon animation */
-.service-card:hover .service-icon {
-  transform: translate3d(0, 0, 0) scale3d(1.06, 1.06, 1);
-}
-
-.service-icon {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
   display: block;
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-  position: relative;
-  z-index: 2;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  width: 55px;
+  height: 74px;
+  background-repeat: no-repeat;
+  background-size: 220px 444px;
+  image-rendering: pixelated;
+  transform-origin: top left;
+}
+
+/* Lede */
+.lede {
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+  margin: 0 0 3rem;
+  letter-spacing: -0.005em;
+  max-width: 46ch;
+}
+
+/* Services — hanging-indent editorial list */
+.services {
+  list-style: none;
+  padding: 0;
+  margin: 3.5rem 0 3rem;
+}
+
+.service {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+
+.service-num {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+  padding-top: 0.55rem;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.service-body {
+  max-width: 52ch;
 }
 
 .service-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  color: white;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  letter-spacing: -0.02em;
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0 0 0.55rem;
+  color: var(--ink);
+  letter-spacing: -0.022em;
+  line-height: 1.25;
 }
 
-.service-description {
+.service-body p {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
+  color: var(--ink-soft);
+  line-height: 1.65;
   margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  font-weight: 400;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
 
-/* Projects Section */
-.projects-section {
-  width: 100%;
-  max-width: 1400px;
-  margin-top: 4rem;
-  padding: 0 2rem;
+/* Clients logos */
+.clients {
+  margin: 3rem 0 2rem;
 }
 
-.projects-heading {
-  font-size: 2.5rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  margin-bottom: 3rem;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  letter-spacing: -0.02em;
-}
-
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
-}
-
-.project-card {
-  position: relative;
-  padding: 2rem;
-  border-radius: 20px;
-  text-decoration: none;
-  
-  /* Matching glass background */
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  
-  /* Glass-like border and shadow */
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  
-  /* Enhanced performance optimizations for variable refresh rates */
-  will-change: transform, box-shadow;
-  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  cursor: pointer;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Glass highlight overlay for projects */
-.project-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  background: linear-gradient(180deg, 
-    rgba(255, 255, 255, 0.3) 0%,
-    transparent 100%
-  );
-  border-radius: 20px 20px 0 0;
-  pointer-events: none;
-}
-
-.project-card:hover {
-  transform: translate3d(0, -6px, 0);
-  box-shadow: 
-    0 16px 32px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-.project-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 2;
-}
-
-.project-icon {
-  font-size: 2.5rem;
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-}
-
-.project-logo {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
-  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
-              box-shadow 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.project-card:hover .project-icon {
-  transform: translate3d(0, 0, 0) scale3d(1.08, 1.08, 1);
-}
-
-.project-card:hover .project-logo {
-  transform: translate3d(0, 0, 0) scale3d(1.08, 1.08, 1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22);
-}
-
-.project-category {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
+.clients-label {
+  font-size: 0.78rem;
   font-weight: 500;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  color: var(--muted);
+  margin: 0 0 1.5rem;
 }
 
-.project-title {
-  font-size: 1.3rem;
+.clients-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.4rem;
+}
+
+.client-logo {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Contact button */
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 0 0;
+  padding: 0.7rem 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: white;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-  letter-spacing: -0.02em;
-}
-
-.project-description {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  font-weight: 400;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  flex-grow: 1;
+  font-family: inherit;
   letter-spacing: -0.01em;
+  color: var(--ink);
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
 }
 
-.project-link {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
-  position: relative;
-  z-index: 2;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  transition: color 0.15s ease-out;
-  letter-spacing: -0.01em;
+.contact-btn:hover {
+  background: var(--ink);
+  color: var(--paper);
 }
 
-.project-card:hover .project-link {
-  color: white;
+.contact-arrow {
+  display: inline-block;
+  transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* High refresh rate display optimization */
-@media (min-resolution: 120dpi) and (min-device-pixel-ratio: 1.5) {
-  .service-card,
-  .project-card {
-    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  
-  .service-icon,
-  .project-icon,
-  .project-logo {
-    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
-  }
+.contact-btn:hover .contact-arrow {
+  transform: translateX(4px);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+@keyframes mask-wipe {
+  0%   { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  100% { -webkit-mask-position: 0% 0;   mask-position: 0% 0;   }
+}
+
+@keyframes sweep-lead {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .App {
-    padding: 1rem;
-    min-height: 100vh;
+    -webkit-mask-image: none;
+    mask-image: none;
+    animation: none;
   }
-  
-  .App-header {
-    font-size: calc(8px + 2vmin);
-    padding: 1rem 0;
+  .App::after { display: none; }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .page {
+    padding: 2rem 1.25rem 2.5rem;
   }
-  
-  h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    line-height: 1.2;
-  }
-  
-  .rabbit-container {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
-  
-  .rabbit-sprite {
-    transform: scale(2.5); /* Slightly smaller on mobile */
-  }
-  
-  .email-button {
-    font-size: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    padding: 0.9rem 1.8rem;
-  }
-  
-  .services-section {
-    margin-top: 1.5rem;
-    padding: 0 1rem;
-  }
-  
-  .services-heading {
-    font-size: 2rem;
+
+  .wordmark {
     margin-bottom: 2rem;
   }
-  
-  .services-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
-    max-width: 100%;
+
+  .service {
+    grid-template-columns: 2rem 1fr;
+    gap: 0.65rem;
+    padding: 1.1rem 0;
   }
-  
-  .service-card {
-    padding: 2rem 1.5rem;
-    /* Reduce backdrop-filter for better mobile performance */
-    backdrop-filter: blur(15px) saturate(160%);
-    -webkit-backdrop-filter: blur(15px) saturate(160%);
-  }
-  
-  .service-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
+
   .service-title {
-    font-size: 1.3rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.15rem;
   }
-  
-  .service-description {
-    font-size: 0.9rem;
-    line-height: 1.5;
+
+  .services {
+    margin: 2.5rem 0 2rem;
   }
-  
-  /* Projects responsive */
-  .projects-section {
-    margin-top: 3rem;
-    padding: 0 1rem;
+
+  .clients {
+    margin: 1.5rem 0 1rem;
   }
-  
-  .projects-heading {
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-  }
-  
-  .project-card {
-    padding: 1.5rem;
-    backdrop-filter: blur(15px) saturate(160%);
-    -webkit-backdrop-filter: blur(15px) saturate(160%);
-  }
-  
-  .project-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 2rem;
-  }
-  
-  .project-logo {
-    width: 50px;
-    height: 50px;
-    padding: 6px;
-  }
-  
-  .project-title {
-    font-size: 1.2rem;
-  }
-  
-  .project-description {
-    font-size: 0.85rem;
+
+  .clients-logos {
+    gap: 0.75rem 1rem;
   }
 }
 
-/* Extra small devices */
-@media (max-width: 480px) {
-  .App {
-    padding: 0.5rem;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .rabbit-sprite {
-    transform: scale(2); /* Even smaller on very small screens */
-  }
-  
-  .email-button {
-    font-size: 0.9rem;
-    margin-top: 1rem;
-    padding: 0.8rem 1.5rem;
-  }
-  
-  .email-icon {
-    font-size: 1rem;
-  }
-  
-  .services-section {
-    margin-top: 1rem;
-    padding: 0 0.5rem;
-  }
-  
-  .services-heading {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .services-grid {
-    gap: 1rem;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .service-card {
-    padding: 1.5rem 1rem;
-    border-radius: 16px;
-  }
-  
-  .service-icon {
-    font-size: 2rem;
-  }
-  
-  .service-title {
-    font-size: 1.2rem;
-  }
-  
-  .service-description {
-    font-size: 0.85rem;
-  }
-  
-  /* Projects extra small */
-  .projects-section {
-    margin-top: 2rem;
-    padding: 0 0.5rem;
-  }
-  
-  .projects-heading {
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .projects-grid {
-    gap: 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .project-card {
-    padding: 1.25rem;
-    border-radius: 16px;
-  }
-  
-  .project-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.8rem;
-  }
-  
-  .project-logo {
-    width: 40px;
-    height: 40px;
-    padding: 4px;
-  }
-  
-  .project-category {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.6rem;
-  }
-  
-  .project-title {
-    font-size: 1.1rem;
-  }
-  
-  .project-description {
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-  }
-  
-  .project-link {
-    font-size: 0.85rem;
-  }
-}
