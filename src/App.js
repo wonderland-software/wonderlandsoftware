@@ -12,6 +12,8 @@ import {
   materializeLineRange,
 } from "@chenglou/pretext";
 import "./App.css";
+import BackgroundShader from "./BackgroundShader";
+import BrushOverlay from "./BrushOverlay";
 import rabbitSprite from "./assets/rabbit_sprite.png";
 import servyLogo from "./assets/servy.png";
 import gearroomLogo from "./assets/gearroom.png";
@@ -323,6 +325,9 @@ function App() {
   const rabbitInnerScale = layout ? layout.rabbitWidth / FRAME_WIDTH : 1;
 
   return (
+    <>
+    <BackgroundShader />
+    <BrushOverlay />
     <div className="App">
       <article className="page">
         <div className="wordmark">
@@ -434,6 +439,7 @@ function App() {
         </a>
       </article>
     </div>
+    </>
   );
 }
 

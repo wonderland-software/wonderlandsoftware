@@ -13,13 +13,7 @@
 }
 
 html {
-  background: radial-gradient(
-    ellipse 140% 95% at 50% 22%,
-    #ffffff 0%,
-    #fafafa 55%,
-    #ededed 100%
-  );
-  background-attachment: fixed;
+  background: #ffffff; /* fallback when WebGL unavailable */
 }
 
 html, body {
@@ -31,11 +25,18 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body {
+  background: transparent;
+}
+
 .App {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
   min-height: 100vh;
   color: var(--ink);
   position: relative;
+  z-index: 1;
+  user-select: none;
+  -webkit-user-select: none;
   /* Full-page mask reveal — one sweep for everything */
   -webkit-mask-image: linear-gradient(
     to right, black 0%, black 63%, transparent 70%, transparent 100%
