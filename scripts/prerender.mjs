@@ -166,7 +166,16 @@ function launchChrome(chrome, url) {
       try {
         child.kill("SIGKILL");
       } catch {}
-      fs.rmSync(userDataDir, { recursive: true, force: true });
+      // Chrome can still be flushing its profile as we delete it, which throws
+      // ENOTEMPTY. Retry, and never let temp-dir cleanup fail the build.
+      try {
+        fs.rmSync(userDataDir, {
+          recursive: true,
+          force: true,
+          maxRetries: 5,
+          retryDelay: 150,
+        });
+      } catch {}
     },
   };
 }
@@ -223,6 +232,7 @@ async function main() {
     // crawler, which is the exact failure this script exists to prevent.
     const required = [
       "Custom software,",
+      "Austin, Texas",
       "Strategy Conversations",
       "Design &amp; Development",
       "Integration &amp; Deployment",

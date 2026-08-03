@@ -89,6 +89,15 @@ body {
   margin-bottom: 3.5rem;
 }
 
+/* Letterhead second line. Also the first mention of the city in the markup,
+   which is what location-based and AI search both key on. */
+.wordmark-location {
+  display: block;
+  margin-top: 0.28rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
 /* Hero title — container that pretext lays out into */
 .hero-title {
   position: relative;
@@ -235,6 +244,16 @@ body {
 .contact-btn:hover {
   background: var(--ink);
   color: var(--paper);
+}
+
+/* Closing line. States plainly who this is, what they do and where, which is
+   the kind of sentence an AI answer engine can lift and attribute. */
+.footer-note {
+  margin: 2.5rem 0 0;
+  max-width: 38rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--muted);
 }
 
 .contact-arrow {

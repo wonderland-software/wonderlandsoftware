@@ -337,6 +337,7 @@ function App() {
       <article className="page">
         <div className="wordmark">
           Wonderland Software
+          <span className="wordmark-location">Austin, Texas</span>
         </div>
 
         <h1
@@ -442,6 +443,12 @@ function App() {
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
+
+        <p className="footer-note">
+          Wonderland Software is a custom software studio based in Austin,
+          Texas, building web apps, mobile apps, AI agents, and Shopify
+          storefronts for teams here and anywhere else.
+        </p>
       </article>
     </div>
     </>
