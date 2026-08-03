@@ -33,8 +33,8 @@ const SHEET_COLS = 4;
 const TOTAL_FRAMES = 23;
 const SPRITE_ASPECT = FRAME_WIDTH / FRAME_HEIGHT;
 
-const TITLE_TEXT = "AI agents, built on your expertise.";
-const TITLE_LINES = ["AI agents,", "built on your expertise."];
+const TITLE_TEXT = "Custom software, built for your business.";
+const TITLE_LINES = ["Custom software,", "built for your business."];
 const TITLE_FONT_FAMILY =
   "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif";
 
@@ -320,7 +320,7 @@ function App() {
   const layout = useWrappedTitle(titleWidth, fontsReady);
 
   const mailto =
-    "mailto:tag@wonderland.software?subject=AI%20Consulting%20Inquiry&body=Hi%20Tag%2C%0A%0AI'd%20like%20to%20explore%20AI%20agents%2C%20automation%2C%20or%20just%20have%20a%20conversation%20about%20my%20business.%0A%0A-%20Company%20%2F%20industry%3A%0A-%20What%20we're%20trying%20to%20solve%3A%0A-%20Tools%20we%20use%20today%3A%0A-%20Timeline%3A%0A%0AThanks!";
+    "mailto:tag@wonderland.software?subject=Project%20Inquiry&body=Hi%20Tag%2C%0A%0AI'd%20like%20to%20talk%20about%20a%20software%20project.%0A%0A-%20Company%20%2F%20industry%3A%0A-%20What%20we're%20trying%20to%20build%3A%0A-%20Tools%20we%20use%20today%3A%0A-%20Timeline%3A%0A%0AThanks!";
 
   const rabbitInnerScale = layout ? layout.rabbitWidth / FRAME_WIDTH : 1;
 
@@ -403,8 +403,8 @@ function App() {
               <h3 className="service-title">Strategy Conversations.</h3>
               <p>
                 Before anything gets built, we have a conversation. We sit down
-                with you to map where AI can actually upgrade your business, and
-                where it shouldn't.
+                with you to map what your business actually needs, and what it
+                doesn't.
               </p>
             </div>
           </li>
@@ -412,11 +412,11 @@ function App() {
           <li className="service">
             <span className="service-num">02</span>
             <div className="service-body">
-              <h3 className="service-title">AI Agents &amp; Automations.</h3>
+              <h3 className="service-title">Design &amp; Development.</h3>
               <p>
-                Custom agents trained on your knowledge, processes, and voice.
-                Paired with automations that move work across your tools so
-                your team focuses on the decisions that matter.
+                Web apps, mobile apps, and custom tools built to fit your
+                business. Thoughtfully designed, cleanly engineered, and shaped
+                around the way your team actually works.
               </p>
             </div>
           </li>
@@ -434,7 +434,7 @@ function App() {
         </ol>
 
         <a href={mailto} target="_blank" rel="noopener noreferrer" className="contact-btn">
-          email tag@wonderlandsoftware
+          email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
       </article>
