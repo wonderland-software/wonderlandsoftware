@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Inter is loaded from public/index.html via <link rel="preconnect"> plus a
+   stylesheet link. A CSS @import here would serialize the requests: the
+   browser cannot even discover the font until this file has downloaded and
+   parsed, which delays first paint and hurts LCP. */
 
 :root {
   --paper: #ffffff;

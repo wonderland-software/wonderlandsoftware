@@ -1,0 +1,35 @@
+# Wonderland Software
+
+> Custom software studio in Austin, Texas. We build web apps, mobile apps,
+> AI agents, and Shopify storefronts for businesses, and wire them into the
+> systems those businesses already run on.
+
+Contact: tag@wonderland.software
+Founder: Tag Locklar
+Location: Austin, Texas, United States
+Site: https://wonderland.software/
+
+## What we do
+
+- **Strategy Conversations.** Before anything gets built, we have a
+  conversation. We sit down with you to map what your business actually
+  needs, and what it doesn't.
+- **Design & Development.** Web apps, mobile apps, and custom tools built to
+  fit your business. Thoughtfully designed, cleanly engineered, and shaped
+  around the way your team actually works.
+- **Integration & Deployment.** From proof-of-concept to production, wired
+  into the systems and workflows you already rely on.
+
+## Areas of work
+
+Custom software development, AI agents and workflow automation, web
+application development, iOS and mobile development, React front ends,
+Shopify storefronts and commerce builds, and systems integration.
+
+## Clients
+
+Meta, Servy, The Gear Room, MFJ.
+
+## Contact
+
+Email tag@wonderland.software to start a conversation about a project.

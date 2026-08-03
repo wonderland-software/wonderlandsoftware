@@ -238,6 +238,11 @@ function useFontsReady() {
  */
 function useWrappedTitle(containerWidth, fontsReady) {
   return useMemo(() => {
+    // During prerender we deliberately stay in the plain-text fallback branch.
+    // The client also renders that branch on its very first pass (width is 0
+    // and fonts are not ready yet), so hydration matches. It also gives
+    // crawlers a clean <h1> instead of aria-hidden positioned line fragments.
+    if (typeof window !== "undefined" && window.__PRERENDER__) return null;
     if (!containerWidth || !fontsReady) return null;
 
     const fontSize = Math.max(36, Math.min(76, containerWidth * 0.1));

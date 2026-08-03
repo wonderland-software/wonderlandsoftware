@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>Page not found | Wonderland Software</title>
+    <meta name="description" content="That page does not exist. Head back to wonderland.software." />
+    <!-- Soft 404s dilute the index; tell crawlers not to keep this one. -->
+    <meta name="robots" content="noindex, follow" />
+    <link rel="icon" href="/rabbit-favicon-single.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+    />
+    <style>
+      * { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        color: #000000;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, system-ui, sans-serif;
+        min-height: 100vh;
+      }
+      .page {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 4rem 2rem 6rem;
+      }
+      .wordmark {
+        font-size: 0.92rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        margin-bottom: 3.5rem;
+      }
+      h1 {
+        font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1;
+        margin: 0 0 1.5rem;
+      }
+      p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #1a1a1a;
+        margin: 0 0 2.5rem;
+        max-width: 34rem;
+      }
+      a.home {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 1.4rem;
+        border: 1px solid #000000;
+        border-radius: 999px;
+        color: #000000;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.98rem;
+        transition: background 0.18s ease, color 0.18s ease;
+      }
+      a.home:hover { background: #000000; color: #ffffff; }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <div class="wordmark">Wonderland Software</div>
+      <h1>Page not found.</h1>
+      <p>
+        That page does not exist, or it moved. Everything lives on the home
+        page right now.
+      </p>
+      <a class="home" href="/">Back to wonderland.software <span aria-hidden="true">&rarr;</span></a>
+    </main>
+  </body>
+</html>
