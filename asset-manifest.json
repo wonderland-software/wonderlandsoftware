@@ -1,18 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.6a6ee872.css",
-    "main.js": "/static/js/main.70a84d92.js",
-    "static/js/453.e16cab5b.chunk.js": "/static/js/453.e16cab5b.chunk.js",
-    "static/media/gearroom.png": "/static/media/gearroom.fa2a2c8c3b9e71ecd597.png",
+    "main.css": "/static/css/main.be8bd758.css",
+    "main.js": "/static/js/main.c6e4fb7e.js",
     "static/media/mfj.png": "/static/media/mfj.85b1f2b180b6d1652806.png",
+    "static/media/gearroom.webp": "/static/media/gearroom.edd7536a43a00fff3685.webp",
     "index.html": "/index.html",
     "static/media/meta-icon.webp": "/static/media/meta-icon.271e1556615ed472b03e.webp",
-    "main.6a6ee872.css.map": "/static/css/main.6a6ee872.css.map",
-    "main.70a84d92.js.map": "/static/js/main.70a84d92.js.map",
-    "453.e16cab5b.chunk.js.map": "/static/js/453.e16cab5b.chunk.js.map"
+    "main.be8bd758.css.map": "/static/css/main.be8bd758.css.map",
+    "main.c6e4fb7e.js.map": "/static/js/main.c6e4fb7e.js.map"
   },
   "entrypoints": [
-    "static/css/main.6a6ee872.css",
-    "static/js/main.70a84d92.js"
+    "static/css/main.be8bd758.css",
+    "static/js/main.c6e4fb7e.js"
   ]
 }
