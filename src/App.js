@@ -58,6 +58,11 @@ function usePrefersReducedMotion() {
     return () => mq.removeListener(update);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("reduce-motion", reduced);
+    return () => document.documentElement.classList.remove("reduce-motion");
+  }, [reduced]);
+
   return reduced;
 }
 

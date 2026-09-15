@@ -219,6 +219,8 @@ export default function BrushOverlay({ reducedMotion = false }) {
     };
   }, [reducedMotion]);
 
+  if (reducedMotion) return null;
+
   return (
     <canvas
       ref={canvasRef}
