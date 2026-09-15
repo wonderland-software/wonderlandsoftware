@@ -66,6 +66,12 @@ export default function BrushOverlay({ reducedMotion = false }) {
     let strokeColors = ["#ffffff", "#ffffff"];
 
     const start = (cx, cy) => {
+      if (
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
       drawing = true;
       strokeColors = randomGradientColors();
       lastCssX = cx;
@@ -217,6 +223,7 @@ export default function BrushOverlay({ reducedMotion = false }) {
     <canvas
       ref={canvasRef}
       aria-hidden="true"
+      className="brush-overlay"
       style={{
         position: "fixed",
         inset: 0,

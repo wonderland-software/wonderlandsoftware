@@ -237,9 +237,10 @@ body {
   color: var(--paper);
 }
 
+/* Inner ring so :focus-visible stays visible; .App's mask clips outer outlines. */
 .contact-btn:focus-visible {
-  outline: 2px solid var(--ink);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--paper), 0 0 0 3px var(--ink);
 }
 
 /* Closing line. States plainly who this is, what they do and where, which is
@@ -281,6 +282,7 @@ body {
     animation: none;
   }
   .App::after { display: none; }
+  .brush-overlay { display: none; }
 }
 
 /* Responsive */
