@@ -132,6 +132,7 @@ export default function BackgroundShader() {
   return (
     <canvas
       ref={ref}
+      aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,

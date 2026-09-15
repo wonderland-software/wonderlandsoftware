@@ -29,12 +29,16 @@ function randomGradientColors() {
   return [`hsl(${h1}, ${s1}%, ${l1}%)`, `hsl(${h2}, ${s2}%, ${l2}%)`];
 }
 
-export default function BrushOverlay() {
+export default function BrushOverlay({ reducedMotion = false }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    if (reducedMotion) return undefined;
+
     const canvas = canvasRef.current;
+    if (!canvas) return undefined;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return undefined;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
@@ -62,6 +66,12 @@ export default function BrushOverlay() {
     let strokeColors = ["#ffffff", "#ffffff"];
 
     const start = (cx, cy) => {
+      if (
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
       drawing = true;
       strokeColors = randomGradientColors();
       lastCssX = cx;
@@ -207,11 +217,15 @@ export default function BrushOverlay() {
       window.removeEventListener("touchend", onTouchEnd);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [reducedMotion]);
+
+  if (reducedMotion) return null;
 
   return (
     <canvas
       ref={canvasRef}
+      aria-hidden="true"
+      className="brush-overlay"
       style={{
         position: "fixed",
         inset: 0,

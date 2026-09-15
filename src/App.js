@@ -16,7 +16,7 @@ import BackgroundShader from "./BackgroundShader";
 import BrushOverlay from "./BrushOverlay";
 import rabbitSprite from "./assets/rabbit_sprite.png";
 import servyLogo from "./assets/servy.png";
-import gearroomLogo from "./assets/gearroom.png";
+import gearroomLogo from "./assets/gearroom.webp";
 import mfjLogo from "./assets/mfj.png";
 import metaLogo from "./assets/meta-icon.webp";
 
@@ -38,7 +38,35 @@ const TITLE_LINES = ["Custom software,", "built for your business."];
 const TITLE_FONT_FAMILY =
   "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif";
 
-function useRabbitAnimation() {
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return undefined;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduced(mq.matches);
+    update();
+    if (mq.addEventListener) {
+      mq.addEventListener("change", update);
+      return () => mq.removeEventListener("change", update);
+    }
+    mq.addListener(update);
+    return () => mq.removeListener(update);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("reduce-motion", reduced);
+    return () => document.documentElement.classList.remove("reduce-motion");
+  }, [reduced]);
+
+  return reduced;
+}
+
+function useRabbitAnimation(reducedMotion) {
   const [frame, setFrame] = useState(0);
   const [direction, setDirection] = useState(1);
   const requestRef = useRef();
@@ -78,9 +106,15 @@ function useRabbitAnimation() {
   );
 
   useEffect(() => {
+    if (reducedMotion) {
+      setFrame(0);
+      setDirection(1);
+      previousTimeRef.current = undefined;
+      return undefined;
+    }
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
-  }, [animate]);
+  }, [animate, reducedMotion]);
 
   return useMemo(
     () => ({
@@ -93,22 +127,9 @@ function useRabbitAnimation() {
   );
 }
 
-function useAnimatedFavicon() {
+function useAnimatedFavicon(reducedMotion) {
   useEffect(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 64;
-    canvas.height = 64;
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-
-    const img = new Image();
-    img.src = rabbitSprite;
-
-    let frame = 0;
-    let direction = 1;
-    let lastTime = 0;
-    let rafId;
-
+    const staticHref = `${process.env.PUBLIC_URL || ""}/rabbit-favicon-single.png`;
     const getFaviconLink = () => {
       let link = document.querySelector("link[rel~='icon']");
       if (!link) {
@@ -118,6 +139,26 @@ function useAnimatedFavicon() {
       }
       return link;
     };
+
+    if (reducedMotion) {
+      getFaviconLink().href = staticHref;
+      return undefined;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return undefined;
+    ctx.imageSmoothingEnabled = false;
+
+    const img = new Image();
+    img.src = rabbitSprite;
+
+    let frame = 0;
+    let direction = 1;
+    let lastTime = 0;
+    let rafId;
 
     const tick = (time) => {
       if (time - lastTime >= 150) {
@@ -152,39 +193,7 @@ function useAnimatedFavicon() {
     };
 
     return () => cancelAnimationFrame(rafId);
-  }, []);
-}
-
-function useScrollReveal() {
-  useEffect(() => {
-    // Exclude reveal-immediate elements — they run their own load animation
-    const els = document.querySelectorAll(".reveal:not(.reveal-immediate)");
-    if (!("IntersectionObserver" in window)) {
-      els.forEach((el) => el.classList.add("is-visible"));
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -80px 0px" }
-    );
-
-    // Defer by one frame so the browser paints the initial hidden state first
-    const raf = requestAnimationFrame(() => {
-      els.forEach((el) => observer.observe(el));
-    });
-    return () => {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-    };
-  }, []);
+  }, [reducedMotion]);
 }
 
 function useElementWidth(ref) {
@@ -315,9 +324,9 @@ function useWrappedTitle(containerWidth, fontsReady) {
 }
 
 function App() {
-  const spriteStyle = useRabbitAnimation();
-  useAnimatedFavicon();
-  useScrollReveal();
+  const reducedMotion = usePrefersReducedMotion();
+  const spriteStyle = useRabbitAnimation(reducedMotion);
+  useAnimatedFavicon(reducedMotion);
   const fontsReady = useFontsReady();
 
   const titleRef = useRef(null);
@@ -332,7 +341,7 @@ function App() {
   return (
     <>
     <BackgroundShader />
-    <BrushOverlay />
+    <BrushOverlay reducedMotion={reducedMotion} />
     <div className="App">
       <article className="page">
         <div className="wordmark">
@@ -439,7 +448,7 @@ function App() {
           </li>
         </ol>
 
-        <a href={mailto} target="_blank" rel="noopener noreferrer" className="contact-btn">
+        <a href={mailto} className="contact-btn">
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
