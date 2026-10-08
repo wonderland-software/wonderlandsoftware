@@ -45,6 +45,9 @@ test('renders studio wordmark, headline, and contact mailto', () => {
   expect(
     screen.getByRole('heading', { name: 'Now building: Vibrate' })
   ).toBeInTheDocument();
+  const vibrateLogo = screen.getByAltText('Vibrate logo');
+  expect(vibrateLogo).toHaveAttribute('width', '64');
+  expect(vibrateLogo).toHaveAttribute('height', '56');
   expect(screen.getByRole('link', { name: /visit vibrate\.world/i })).toHaveAttribute(
     'href',
     'https://vibrate.world'

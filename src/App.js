@@ -19,6 +19,8 @@ import servyLogo from "./assets/servy.png";
 import gearroomLogo from "./assets/gearroom.webp";
 import mfjLogo from "./assets/mfj.png";
 import metaLogo from "./assets/meta-icon.webp";
+import vibrateLogoWebp from "./assets/logo-mark-176.webp";
+import vibrateLogoPng from "./assets/logo-mark-176.png";
 
 const CLIENTS = [
   { name: "Meta", logo: metaLogo },
@@ -449,6 +451,16 @@ function App() {
         </ol>
 
         <section className="now-building" aria-labelledby="now-building-heading">
+          <picture>
+            <source type="image/webp" srcSet={vibrateLogoWebp} />
+            <img
+              src={vibrateLogoPng}
+              alt="Vibrate logo"
+              width={64}
+              height={56}
+              className="now-building-logo"
+            />
+          </picture>
           <div className="service-body">
             <h2 id="now-building-heading" className="service-title">
               Now building: Vibrate

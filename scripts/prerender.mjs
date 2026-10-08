@@ -238,6 +238,7 @@ async function main() {
       "Integration &amp; Deployment",
       "Trusted by",
       "Now building: Vibrate",
+      "Vibrate logo",
       "vibrate.world",
       "Available on TestFlight",
     ];
