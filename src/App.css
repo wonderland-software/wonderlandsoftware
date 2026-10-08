@@ -128,6 +128,13 @@ body {
   overflow: hidden;
 }
 
+.rabbit-abs picture,
+.rabbit-abs img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
 .rabbit-sprite {
   display: block;
   width: 55px;

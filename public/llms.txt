@@ -1,21 +1,12 @@
 # Wonderland Software
 
-> Wonderland Software is based in Austin, Texas, and is currently
-> building Vibrate.
+Wonderland Software, Austin, Texas. Currently building Vibrate.
+
+Vibe-sharing: your current vibe, a place pin, ratings, and friends.
 
 Contact: tag@wonderland.software
 Founder: Tag Locklar
 Location: Austin, Texas, United States
 Site: https://wonderland.software/
-
-## Currently building
-
-**Vibrate.** Vibe-sharing: you share your current vibe, pin a place, rate
-it, and show it to friends.
-
-Site: https://vibrate.world
-Available on TestFlight: https://testflight.apple.com/join/pDGR9JAe
-
-## Contact
-
-Email tag@wonderland.software.
+Product: https://vibrate.world
+TestFlight: https://testflight.apple.com/join/pDGR9JAe

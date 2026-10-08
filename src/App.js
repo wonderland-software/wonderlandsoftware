@@ -3,7 +3,6 @@ import React, {
   useRef,
   useState,
   useMemo,
-  useCallback,
   useLayoutEffect,
 } from "react";
 import {
@@ -15,25 +14,28 @@ import "./App.css";
 import BackgroundShader from "./BackgroundShader";
 import BrushOverlay from "./BrushOverlay";
 import rabbitSprite from "./assets/rabbit_sprite.png";
-import servyLogo from "./assets/servy.png";
-import gearroomLogo from "./assets/gearroom.webp";
-import mfjLogo from "./assets/mfj.png";
-import metaLogo from "./assets/meta-icon.webp";
 import vibrateLogoWebp from "./assets/logo-mark-176.webp";
 import vibrateLogoPng from "./assets/logo-mark-176.png";
+// Restore with the Trusted by block below:
+// import servyLogo from "./assets/servy.png";
+// import gearroomLogo from "./assets/gearroom.webp";
+// import mfjLogo from "./assets/mfj.png";
+// import metaLogo from "./assets/meta-icon.webp";
 
-const CLIENTS = [
-  { name: "Meta", logo: metaLogo },
-  { name: "Servy", logo: servyLogo },
-  { name: "The Gear Room", logo: gearroomLogo },
-  { name: "MFJ", logo: mfjLogo },
-];
+// const CLIENTS = [
+//   { name: "Meta", logo: metaLogo },
+//   { name: "Servy", logo: servyLogo },
+//   { name: "The Gear Room", logo: gearroomLogo },
+//   { name: "MFJ", logo: mfjLogo },
+// ];
 
 const FRAME_WIDTH = 55;
 const FRAME_HEIGHT = 74;
 const SHEET_COLS = 4;
 const TOTAL_FRAMES = 23;
-const SPRITE_ASPECT = FRAME_WIDTH / FRAME_HEIGHT;
+const VIBRATE_LOGO_W = 202;
+const VIBRATE_LOGO_H = 176;
+const VIBRATE_LOGO_ASPECT = VIBRATE_LOGO_W / VIBRATE_LOGO_H;
 
 const TITLE_TEXT = "Currently building Vibrate";
 const TITLE_LINES = ["Currently building", "Vibrate"];
@@ -66,67 +68,6 @@ function usePrefersReducedMotion() {
   }, [reduced]);
 
   return reduced;
-}
-
-function useRabbitAnimation(reducedMotion) {
-  const [frame, setFrame] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const requestRef = useRef();
-  const previousTimeRef = useRef();
-
-  const animate = useCallback(
-    (time) => {
-      if (previousTimeRef.current !== undefined) {
-        const deltaTime = time - previousTimeRef.current;
-
-        if (deltaTime > 150) {
-          setFrame((prevFrame) => {
-            const nextFrame = prevFrame + direction;
-
-            if (nextFrame >= TOTAL_FRAMES - 1) {
-              setDirection(-1);
-              return TOTAL_FRAMES - 1;
-            } else if (nextFrame <= 0) {
-              setDirection(1);
-              return 0;
-            }
-
-            if (direction === -1 && prevFrame === 15) {
-              return 7;
-            }
-
-            return nextFrame;
-          });
-          previousTimeRef.current = time;
-        }
-      } else {
-        previousTimeRef.current = time;
-      }
-      requestRef.current = requestAnimationFrame(animate);
-    },
-    [direction]
-  );
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setFrame(0);
-      setDirection(1);
-      previousTimeRef.current = undefined;
-      return undefined;
-    }
-    requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
-  }, [animate, reducedMotion]);
-
-  return useMemo(
-    () => ({
-      backgroundImage: `url(${rabbitSprite})`,
-      backgroundPosition: `${-(frame % SHEET_COLS) * FRAME_WIDTH}px ${
-        -Math.floor(frame / SHEET_COLS) * FRAME_HEIGHT
-      }px`,
-    }),
-    [frame]
-  );
 }
 
 function useAnimatedFavicon(reducedMotion) {
@@ -245,7 +186,7 @@ function useFontsReady() {
 
 /**
  * Runs pretext layout over TITLE_TEXT, using a narrower width for lines
- * whose vertical range overlaps the rabbit's bounding box (shrink-wrap).
+ * whose vertical range overlaps the hero mark's bounding box (shrink-wrap).
  */
 function useWrappedTitle(containerWidth, fontsReady) {
   return useMemo(() => {
@@ -262,11 +203,11 @@ function useWrappedTitle(containerWidth, fontsReady) {
     const letterSpacingEm = -0.04;
     const letterSpacingPx = letterSpacingEm * fontSize;
 
-    // Rabbit fits into ~3 lines vertically, starts at y=0
-    const rabbitHeight = lineHeight * 3;
-    const rabbitWidth = rabbitHeight * SPRITE_ASPECT;
-    const rabbitGutter = fontSize * 0.45;
-    const rabbitTotal = rabbitWidth + rabbitGutter;
+    // Hero mark fits into ~3 lines vertically, never larger than the source asset.
+    const logoHeight = Math.min(VIBRATE_LOGO_H, lineHeight * 3);
+    const logoWidth = logoHeight * VIBRATE_LOGO_ASPECT;
+    const logoGutter = fontSize * 0.45;
+    const logoTotal = logoWidth + logoGutter;
 
     const fontSpec = `${fontWeight} ${fontSize}px ${TITLE_FONT_FAMILY}`;
     const lines = [];
@@ -283,9 +224,9 @@ function useWrappedTitle(containerWidth, fontsReady) {
 
       for (let safety = 0; safety < 20; safety++) {
         const lineBottom = y + lineHeight;
-        const overlapsRabbit = y < rabbitHeight && lineBottom > 0;
-        const maxWidth = overlapsRabbit
-          ? Math.max(60, containerWidth - rabbitTotal)
+        const overlapsLogo = y < logoHeight && lineBottom > 0;
+        const maxWidth = overlapsLogo
+          ? Math.max(60, containerWidth - logoTotal)
           : containerWidth;
 
         const range = layoutNextLineRange(prepared, cursor, maxWidth);
@@ -296,7 +237,7 @@ function useWrappedTitle(containerWidth, fontsReady) {
           maxWidth,
           measuredWidth: line.width,
           y,
-          overlapsRabbit,
+          overlapsLogo,
         });
         if (
           range.end.segmentIndex === cursor.segmentIndex &&
@@ -310,15 +251,15 @@ function useWrappedTitle(containerWidth, fontsReady) {
       }
     }
 
-    const totalHeight = Math.max(y, rabbitHeight);
+    const totalHeight = Math.max(y, logoHeight);
 
     return {
       fontSize,
       lineHeight,
       letterSpacingEm,
-      rabbitWidth,
-      rabbitHeight,
-      rabbitGutter,
+      logoWidth,
+      logoHeight,
+      logoGutter,
       totalHeight,
       lines,
     };
@@ -327,7 +268,6 @@ function useWrappedTitle(containerWidth, fontsReady) {
 
 function App() {
   const reducedMotion = usePrefersReducedMotion();
-  const spriteStyle = useRabbitAnimation(reducedMotion);
   useAnimatedFavicon(reducedMotion);
   const fontsReady = useFontsReady();
 
@@ -336,8 +276,8 @@ function App() {
   const layout = useWrappedTitle(titleWidth, fontsReady);
 
   const mailto = "mailto:tag@wonderland.software";
-
-  const rabbitInnerScale = layout ? layout.rabbitWidth / FRAME_WIDTH : 1;
+  const logoWidth = layout ? layout.logoWidth : VIBRATE_LOGO_W;
+  const logoHeight = layout ? layout.logoHeight : VIBRATE_LOGO_H;
 
   return (
     <>
@@ -362,27 +302,28 @@ function App() {
                   lineHeight: `${layout.lineHeight}px`,
                   letterSpacing: `${layout.letterSpacingEm}em`,
                 }
-              : undefined
+              : { minHeight: logoHeight }
           }
         >
+          <div
+            className="rabbit-abs"
+            style={{
+              width: logoWidth,
+              height: logoHeight,
+            }}
+          >
+            <picture>
+              <source type="image/webp" srcSet={vibrateLogoWebp} />
+              <img
+                src={vibrateLogoPng}
+                alt="Vibrate logo"
+                width={Math.round(logoWidth)}
+                height={Math.round(logoHeight)}
+              />
+            </picture>
+          </div>
           {layout ? (
             <>
-              <div
-                className="rabbit-abs"
-                aria-hidden="true"
-                style={{
-                  width: layout.rabbitWidth,
-                  height: layout.rabbitHeight,
-                }}
-              >
-                <div
-                  className="rabbit-sprite"
-                  style={{
-                    ...spriteStyle,
-                    transform: `scale(${rabbitInnerScale})`,
-                  }}
-                />
-              </div>
               {layout.lines.map((line, i) => (
                 <div
                   key={i}
@@ -398,11 +339,12 @@ function App() {
               ))}
             </>
           ) : (
-            // Fallback while width/fonts are measuring — plain text
+            // Fallback while width/fonts are measuring, plain text
             <span className="title-fallback">{TITLE_TEXT}</span>
           )}
         </h1>
 
+        {/*
         <div className="clients">
           <p className="clients-label">Trusted by</p>
           <div className="clients-logos">
@@ -411,21 +353,13 @@ function App() {
             ))}
           </div>
         </div>
+        */}
 
         <div className="services">
           <div className="service-body">
-            <picture>
-              <source type="image/webp" srcSet={vibrateLogoWebp} />
-              <img
-                src={vibrateLogoPng}
-                alt="Vibrate logo"
-                width={64}
-                height={56}
-              />
-            </picture>
             <p>
-              Vibrate is vibe-sharing. You share your current vibe, pin a
-              place, rate it, and show it to friends.
+              Vibe-sharing: your current vibe, a place pin, ratings, and
+              friends.
             </p>
           </div>
         </div>
@@ -440,24 +374,13 @@ function App() {
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
         <br />
-        <a
-          href="https://testflight.apple.com/join/pDGR9JAe"
-          className="contact-btn"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Available on TestFlight
-          <span className="contact-arrow" aria-hidden="true">→</span>
-        </a>
-        <br />
         <a href={mailto} className="contact-btn">
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
 
         <p className="footer-note">
-          Wonderland Software is based in Austin, Texas, and is currently
-          building Vibrate.
+          Wonderland Software is based in Austin, Texas.
         </p>
       </article>
     </div>
