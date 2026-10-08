@@ -1,16 +1,18 @@
 {
   "files": {
     "main.css": "/static/css/main.be8bd758.css",
-    "main.js": "/static/js/main.c6e4fb7e.js",
+    "main.js": "/static/js/main.77f640d8.js",
+    "static/media/logo-mark-176.png": "/static/media/logo-mark-176.0f688f12d6d804060ea9.png",
     "static/media/mfj.png": "/static/media/mfj.85b1f2b180b6d1652806.png",
+    "static/media/logo-mark-176.webp": "/static/media/logo-mark-176.9bf7565772e9f9b19b50.webp",
     "static/media/gearroom.webp": "/static/media/gearroom.edd7536a43a00fff3685.webp",
-    "index.html": "/index.html",
     "static/media/meta-icon.webp": "/static/media/meta-icon.271e1556615ed472b03e.webp",
+    "index.html": "/index.html",
     "main.be8bd758.css.map": "/static/css/main.be8bd758.css.map",
-    "main.c6e4fb7e.js.map": "/static/js/main.c6e4fb7e.js.map"
+    "main.77f640d8.js.map": "/static/js/main.77f640d8.js.map"
   },
   "entrypoints": [
     "static/css/main.be8bd758.css",
-    "static/js/main.c6e4fb7e.js"
+    "static/js/main.77f640d8.js"
   ]
 }
