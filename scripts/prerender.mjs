@@ -234,10 +234,8 @@ async function main() {
       "Currently building",
       "Vibrate",
       "Austin, Texas",
-      "Trusted by",
       "Vibrate logo",
       "vibrate.world",
-      "Available on TestFlight",
       "tag@wonderland.software",
     ];
     const missing = required.filter((s) => !markup.includes(s));

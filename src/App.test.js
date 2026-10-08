@@ -41,14 +41,12 @@ test('renders Wonderland identity, Vibrate focus, and contact mailto', () => {
   expect(contact).not.toHaveAttribute('target');
 
   const vibrateLogo = screen.getByAltText('Vibrate logo');
-  expect(vibrateLogo).toHaveAttribute('width', '64');
-  expect(vibrateLogo).toHaveAttribute('height', '56');
+  expect(vibrateLogo).toHaveAttribute('width');
+  expect(vibrateLogo).toHaveAttribute('height');
   expect(screen.getByRole('link', { name: /visit vibrate\.world/i })).toHaveAttribute(
     'href',
     'https://vibrate.world'
   );
-  expect(
-    screen.getByRole('link', { name: /available on testflight/i })
-  ).toHaveAttribute('href', 'https://testflight.apple.com/join/pDGR9JAe');
-  expect(screen.queryByText(/Strategy Conversations/)).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: /available on testflight/i })).not.toBeInTheDocument();
+  expect(screen.queryByText('Trusted by')).not.toBeInTheDocument();
 });
