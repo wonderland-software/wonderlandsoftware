@@ -378,10 +378,6 @@ function App() {
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
-
-        <p className="footer-note">
-          Wonderland Software is based in Austin, Texas.
-        </p>
       </article>
     </div>
     </>

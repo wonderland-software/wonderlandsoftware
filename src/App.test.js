@@ -27,7 +27,12 @@ test('renders Wonderland identity, Vibrate focus, and contact mailto', () => {
   expect(screen.getByText((_, el) => (
     el.classList?.contains('wordmark') && el.textContent.includes('Wonderland Software')
   ))).toBeInTheDocument();
-  expect(screen.getByText('Austin, Texas')).toBeInTheDocument();
+  expect(screen.getByText((_, el) => (
+    el.classList?.contains('wordmark-location') && el.textContent === 'Austin, Texas'
+  ))).toBeInTheDocument();
+  expect(
+    screen.queryByText('Wonderland Software is based in Austin, Texas.')
+  ).not.toBeInTheDocument();
   expect(
     screen.getByRole('heading', {
       name: 'Currently building Vibrate',
