@@ -184,6 +184,39 @@ body {
   letter-spacing: -0.005em;
 }
 
+/* Current product, same type and spacing as the services list above it. */
+.now-building {
+  margin: 0 0 3rem;
+}
+
+.now-building-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.85rem 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.now-building-secondary {
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: -0.01em;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.now-building-secondary:hover,
+.now-building-secondary:focus-visible {
+  color: var(--ink);
+}
+
+.now-building-secondary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 3px var(--ink);
+  border-radius: 2px;
+}
+
 /* Clients logos */
 .clients {
   margin: 3rem 0 2rem;
@@ -311,6 +344,10 @@ html.reduce-motion .brush-overlay {
 
   .services {
     margin: 2.5rem 0 2rem;
+  }
+
+  .now-building {
+    margin: 0 0 2rem;
   }
 
   .clients {

@@ -448,6 +448,37 @@ function App() {
           </li>
         </ol>
 
+        <section className="now-building" aria-labelledby="now-building-heading">
+          <div className="service-body">
+            <h2 id="now-building-heading" className="service-title">
+              Now building: Vibrate
+            </h2>
+            <p>
+              Vibrate is vibe-sharing. You share your current vibe, pin a
+              place, rate it, and show it to friends.
+            </p>
+          </div>
+          <div className="now-building-links">
+            <a
+              href="https://vibrate.world"
+              className="contact-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              visit vibrate.world
+              <span className="contact-arrow" aria-hidden="true">→</span>
+            </a>
+            <a
+              href="https://testflight.apple.com/join/pDGR9JAe"
+              className="now-building-secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Available on TestFlight
+            </a>
+          </div>
+        </section>
+
         <a href={mailto} className="contact-btn">
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>

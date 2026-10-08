@@ -237,6 +237,9 @@ async function main() {
       "Design &amp; Development",
       "Integration &amp; Deployment",
       "Trusted by",
+      "Now building: Vibrate",
+      "vibrate.world",
+      "Available on TestFlight",
     ];
     const missing = required.filter((s) => !markup.includes(s));
     if (missing.length) {

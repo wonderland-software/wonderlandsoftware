@@ -41,4 +41,15 @@ test('renders studio wordmark, headline, and contact mailto', () => {
   });
   expect(contact).toHaveAttribute('href', MAILTO);
   expect(contact).not.toHaveAttribute('target');
+
+  expect(
+    screen.getByRole('heading', { name: 'Now building: Vibrate' })
+  ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /visit vibrate\.world/i })).toHaveAttribute(
+    'href',
+    'https://vibrate.world'
+  );
+  expect(
+    screen.getByRole('link', { name: /available on testflight/i })
+  ).toHaveAttribute('href', 'https://testflight.apple.com/join/pDGR9JAe');
 });

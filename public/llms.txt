@@ -30,6 +30,14 @@ Shopify storefronts and commerce builds, and systems integration.
 
 Meta, Servy, The Gear Room, MFJ.
 
+## Now building
+
+**Vibrate.** Vibe-sharing: you share your current vibe, pin a place, rate
+it, and show it to friends. Wonderland Software is building Vibrate.
+
+Site: https://vibrate.world
+Available on TestFlight: https://testflight.apple.com/join/pDGR9JAe
+
 ## Contact
 
 Email tag@wonderland.software to start a conversation about a project.
