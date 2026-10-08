@@ -7,9 +7,6 @@ jest.mock('@chenglou/pretext', () => ({
   materializeLineRange: () => ({ text: '', width: 0 }),
 }));
 
-const MAILTO =
-  "mailto:tag@wonderland.software?subject=Project%20Inquiry&body=Hi%20Tag%2C%0A%0AI'd%20like%20to%20talk%20about%20a%20software%20project.%0A%0A-%20Company%20%2F%20industry%3A%0A-%20What%20we're%20trying%20to%20build%3A%0A-%20Tools%20we%20use%20today%3A%0A-%20Timeline%3A%0A%0AThanks!";
-
 beforeAll(() => {
   // jsdom has no canvas; skip WebGL/2d so the page can render in tests.
   HTMLCanvasElement.prototype.getContext = () => null;
@@ -24,27 +21,25 @@ beforeAll(() => {
   });
 });
 
-test('renders studio wordmark, headline, and contact mailto', () => {
+test('renders Wonderland identity, Vibrate focus, and contact mailto', () => {
   render(<App />);
 
   expect(screen.getByText((_, el) => (
     el.classList?.contains('wordmark') && el.textContent.includes('Wonderland Software')
   ))).toBeInTheDocument();
+  expect(screen.getByText('Austin, Texas')).toBeInTheDocument();
   expect(
     screen.getByRole('heading', {
-      name: 'Custom software, built for your business.',
+      name: 'Currently building Vibrate',
     })
   ).toBeInTheDocument();
 
   const contact = screen.getByRole('link', {
     name: /email tag@wonderland\.software/i,
   });
-  expect(contact).toHaveAttribute('href', MAILTO);
+  expect(contact).toHaveAttribute('href', 'mailto:tag@wonderland.software');
   expect(contact).not.toHaveAttribute('target');
 
-  expect(
-    screen.getByRole('heading', { name: 'Now building: Vibrate' })
-  ).toBeInTheDocument();
   const vibrateLogo = screen.getByAltText('Vibrate logo');
   expect(vibrateLogo).toHaveAttribute('width', '64');
   expect(vibrateLogo).toHaveAttribute('height', '56');
@@ -55,4 +50,5 @@ test('renders studio wordmark, headline, and contact mailto', () => {
   expect(
     screen.getByRole('link', { name: /available on testflight/i })
   ).toHaveAttribute('href', 'https://testflight.apple.com/join/pDGR9JAe');
+  expect(screen.queryByText(/Strategy Conversations/)).not.toBeInTheDocument();
 });

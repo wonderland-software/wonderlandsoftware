@@ -1,6 +1,6 @@
 # Wonderland Software
 
-Marketing site for [Wonderland Software](https://wonderland.software), a custom software studio in Austin, Texas. Single-page Create React App, deployed to GitHub Pages.
+Marketing site for [Wonderland Software](https://wonderland.software) in Austin, Texas, currently building [Vibrate](https://vibrate.world). Single-page Create React App, deployed to GitHub Pages.
 
 ## Scripts
 

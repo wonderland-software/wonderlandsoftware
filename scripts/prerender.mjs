@@ -231,16 +231,14 @@ async function main() {
     // Guard: a silently-broken render would ship a blank page to every
     // crawler, which is the exact failure this script exists to prevent.
     const required = [
-      "Custom software,",
+      "Currently building",
+      "Vibrate",
       "Austin, Texas",
-      "Strategy Conversations",
-      "Design &amp; Development",
-      "Integration &amp; Deployment",
       "Trusted by",
-      "Now building: Vibrate",
       "Vibrate logo",
       "vibrate.world",
       "Available on TestFlight",
+      "tag@wonderland.software",
     ];
     const missing = required.filter((s) => !markup.includes(s));
     if (missing.length) {

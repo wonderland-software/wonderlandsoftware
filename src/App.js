@@ -35,8 +35,8 @@ const SHEET_COLS = 4;
 const TOTAL_FRAMES = 23;
 const SPRITE_ASPECT = FRAME_WIDTH / FRAME_HEIGHT;
 
-const TITLE_TEXT = "Custom software, built for your business.";
-const TITLE_LINES = ["Custom software,", "built for your business."];
+const TITLE_TEXT = "Currently building Vibrate";
+const TITLE_LINES = ["Currently building", "Vibrate"];
 const TITLE_FONT_FAMILY =
   "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif";
 
@@ -335,8 +335,7 @@ function App() {
   const titleWidth = useElementWidth(titleRef);
   const layout = useWrappedTitle(titleWidth, fontsReady);
 
-  const mailto =
-    "mailto:tag@wonderland.software?subject=Project%20Inquiry&body=Hi%20Tag%2C%0A%0AI'd%20like%20to%20talk%20about%20a%20software%20project.%0A%0A-%20Company%20%2F%20industry%3A%0A-%20What%20we're%20trying%20to%20build%3A%0A-%20Tools%20we%20use%20today%3A%0A-%20Timeline%3A%0A%0AThanks!";
+  const mailto = "mailto:tag@wonderland.software";
 
   const rabbitInnerScale = layout ? layout.rabbitWidth / FRAME_WIDTH : 1;
 
@@ -413,93 +412,52 @@ function App() {
           </div>
         </div>
 
-        <ol className="services">
-          <li className="service">
-            <span className="service-num">01</span>
-            <div className="service-body">
-              <h3 className="service-title">Strategy Conversations.</h3>
-              <p>
-                Before anything gets built, we have a conversation. We sit down
-                with you to map what your business actually needs, and what it
-                doesn't.
-              </p>
-            </div>
-          </li>
-
-          <li className="service">
-            <span className="service-num">02</span>
-            <div className="service-body">
-              <h3 className="service-title">Design &amp; Development.</h3>
-              <p>
-                Web apps, mobile apps, and custom tools built to fit your
-                business. Thoughtfully designed, cleanly engineered, and shaped
-                around the way your team actually works.
-              </p>
-            </div>
-          </li>
-
-          <li className="service">
-            <span className="service-num">03</span>
-            <div className="service-body">
-              <h3 className="service-title">Integration &amp; Deployment.</h3>
-              <p>
-                From proof-of-concept to production, wired into the systems
-                and workflows you already rely on.
-              </p>
-            </div>
-          </li>
-        </ol>
-
-        <section className="now-building" aria-labelledby="now-building-heading">
-          <picture>
-            <source type="image/webp" srcSet={vibrateLogoWebp} />
-            <img
-              src={vibrateLogoPng}
-              alt="Vibrate logo"
-              width={64}
-              height={56}
-              className="now-building-logo"
-            />
-          </picture>
+        <div className="services">
           <div className="service-body">
-            <h2 id="now-building-heading" className="service-title">
-              Now building: Vibrate
-            </h2>
+            <picture>
+              <source type="image/webp" srcSet={vibrateLogoWebp} />
+              <img
+                src={vibrateLogoPng}
+                alt="Vibrate logo"
+                width={64}
+                height={56}
+              />
+            </picture>
             <p>
               Vibrate is vibe-sharing. You share your current vibe, pin a
               place, rate it, and show it to friends.
             </p>
           </div>
-          <div className="now-building-links">
-            <a
-              href="https://vibrate.world"
-              className="contact-btn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              visit vibrate.world
-              <span className="contact-arrow" aria-hidden="true">→</span>
-            </a>
-            <a
-              href="https://testflight.apple.com/join/pDGR9JAe"
-              className="now-building-secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Available on TestFlight
-            </a>
-          </div>
-        </section>
+        </div>
 
+        <a
+          href="https://vibrate.world"
+          className="contact-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          visit vibrate.world
+          <span className="contact-arrow" aria-hidden="true">→</span>
+        </a>
+        <br />
+        <a
+          href="https://testflight.apple.com/join/pDGR9JAe"
+          className="contact-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Available on TestFlight
+          <span className="contact-arrow" aria-hidden="true">→</span>
+        </a>
+        <br />
         <a href={mailto} className="contact-btn">
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
 
         <p className="footer-note">
-          Wonderland Software is a custom software studio based in Austin,
-          Texas, building web apps, mobile apps, AI agents, and Shopify
-          storefronts for teams here and anywhere else.
+          Wonderland Software is based in Austin, Texas, and is currently
+          building Vibrate.
         </p>
       </article>
     </div>
