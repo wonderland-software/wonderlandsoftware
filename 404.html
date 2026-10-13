@@ -6,7 +6,6 @@
     <meta name="theme-color" content="#ffffff" />
     <title>Page not found | Wonderland Software</title>
     <meta name="description" content="That page does not exist. Head back to wonderland.software." />
-    <!-- Soft 404s dilute the index; tell crawlers not to keep this one. -->
     <meta name="robots" content="noindex, follow" />
     <link rel="icon" href="/rabbit-favicon-single.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,34 +51,32 @@
         font-size: 1.05rem;
         line-height: 1.6;
         color: #1a1a1a;
-        margin: 0 0 2.5rem;
+        margin: 0 0 1.5rem;
         max-width: 34rem;
       }
-      a.home {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.6rem;
-        padding: 0.85rem 1.4rem;
-        border: 1px solid #000000;
-        border-radius: 999px;
-        color: #000000;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.98rem;
-        transition: background 0.18s ease, color 0.18s ease;
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
       }
-      a.home:hover { background: #000000; color: #ffffff; }
+      li { margin: 0.4rem 0; }
+      a {
+        color: #000000;
+        font-weight: 500;
+      }
     </style>
   </head>
   <body>
     <main class="page">
       <div class="wordmark">Wonderland Software</div>
       <h1>Page not found.</h1>
-      <p>
-        That page does not exist, or it moved. Everything lives on the home
-        page right now.
-      </p>
-      <a class="home" href="/">Back to wonderland.software <span aria-hidden="true">&rarr;</span></a>
+      <p>That page does not exist.</p>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/vibrate/">Vibrate</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
     </main>
   </body>
 </html>
