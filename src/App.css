@@ -96,6 +96,120 @@ body {
   color: var(--muted);
 }
 
+.site-header {
+  margin-bottom: 2.25rem;
+}
+
+.page-home .site-header {
+  margin-bottom: 1.5rem;
+}
+
+.site-header .wordmark {
+  margin-bottom: 1rem;
+}
+
+.wordmark-link {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.wordmark-link:hover,
+.wordmark-link:focus-visible {
+  color: var(--ink);
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.15rem;
+  align-items: baseline;
+}
+
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 0.2rem 0;
+}
+
+.site-nav a[aria-current="page"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--ink);
+}
+
+.page-title {
+  margin: 0 0 1.25rem;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+}
+
+.hero-note {
+  margin: 0;
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+}
+
+.hero-note a {
+  color: var(--ink);
+  font-weight: 600;
+  text-underline-offset: 0.15em;
+}
+
+.product-mark {
+  display: block;
+  width: 88px;
+  margin: 0 0 1.25rem;
+}
+
+.product-mark img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.page-actions {
+  margin-top: 1.75rem;
+}
+
+.service-body p + p {
+  margin-top: 0.9rem;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1.25rem;
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.92rem;
+}
+
+.site-footer a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.35rem 0;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--ink);
+}
+
 /* Hero title — container that pretext lays out into */
 .hero-title {
   position: relative;
@@ -304,6 +418,15 @@ html.reduce-motion .brush-overlay {
 
   .wordmark {
     margin-bottom: 2rem;
+  }
+
+  .site-header,
+  .page-home .site-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .page-title {
+    margin-bottom: 1rem;
   }
 
   .service {

@@ -1,12 +1,30 @@
 # Wonderland Software
 
-Wonderland Software, Austin, Texas. Currently building Vibrate.
+Wonderland Software is a custom software studio based in Austin, Texas, building web apps, mobile apps, AI agents, and Shopify storefronts for teams here and anywhere else.
 
-Vibe-sharing: your current vibe, a place pin, ratings, and friends.
-
-Contact: tag@wonderland.software
 Founder: Tag Locklar
+Contact: tag@wonderland.software
 Location: Austin, Texas, United States
-Site: https://wonderland.software/
-Product: https://vibrate.world
-TestFlight: https://testflight.apple.com/join/pDGR9JAe
+
+## Pages
+
+- Home: https://wonderland.software/
+- About: https://wonderland.software/about/
+- Vibrate: https://wonderland.software/vibrate/
+- Contact: https://wonderland.software/contact/
+
+## Services
+
+- Strategy Conversations. Before anything gets built, we have a conversation. We sit down with you to map what your business actually needs, and what it doesn't.
+- Design & Development. Web apps, mobile apps, and custom tools built to fit your business. Thoughtfully designed, cleanly engineered, and shaped around the way your team actually works.
+- Integration & Deployment. From proof-of-concept to production, wired into the systems and workflows you already rely on.
+
+## Vibrate
+
+Share your current vibe with a place pin, ratings, and friends. Vibrate is an iOS app from Wonderland Software. It is on TestFlight.
+
+https://vibrate.world
+
+## Clients
+
+Meta, Servy, The Gear Room, MFJ.

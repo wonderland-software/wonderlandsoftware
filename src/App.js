@@ -16,18 +16,18 @@ import BrushOverlay from "./BrushOverlay";
 import rabbitSprite from "./assets/rabbit_sprite.png";
 import vibrateLogoWebp from "./assets/logo-mark-176.webp";
 import vibrateLogoPng from "./assets/logo-mark-176.png";
-// Restore with the Trusted by block below:
-// import servyLogo from "./assets/servy.png";
-// import gearroomLogo from "./assets/gearroom.webp";
-// import mfjLogo from "./assets/mfj.png";
-// import metaLogo from "./assets/meta-icon.webp";
+import servyLogo from "./assets/servy.png";
+import gearroomLogo from "./assets/gearroom.webp";
+import mfjLogo from "./assets/mfj.png";
+import metaLogo from "./assets/meta-icon.webp";
+import { MAILTO, PAGES, pageForPath, canonicalFor } from "./meta.mjs";
 
-// const CLIENTS = [
-//   { name: "Meta", logo: metaLogo },
-//   { name: "Servy", logo: servyLogo },
-//   { name: "The Gear Room", logo: gearroomLogo },
-//   { name: "MFJ", logo: mfjLogo },
-// ];
+const CLIENTS = [
+  { name: "Meta", logo: metaLogo },
+  { name: "Servy", logo: servyLogo },
+  { name: "The Gear Room", logo: gearroomLogo },
+  { name: "MFJ", logo: mfjLogo },
+];
 
 const FRAME_WIDTH = 55;
 const FRAME_HEIGHT = 74;
@@ -41,6 +41,29 @@ const TITLE_TEXT = "Currently building Vibrate";
 const TITLE_LINES = ["Currently building", "Vibrate"];
 const TITLE_FONT_FAMILY =
   "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif";
+
+const FOOTER_LINKS = [
+  {
+    href: "https://vibrate.world/privacy",
+    label: "Privacy",
+    ariaLabel: "Privacy policy",
+  },
+  {
+    href: "https://vibrate.world/terms",
+    label: "Terms",
+    ariaLabel: "Terms of service",
+  },
+  {
+    href: "https://x.com/getvibrate",
+    label: "X",
+    ariaLabel: "Vibrate on X",
+  },
+  {
+    href: "https://www.instagram.com/getvibrate/",
+    label: "Instagram",
+    ariaLabel: "Vibrate on Instagram",
+  },
+];
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(() =>
@@ -184,6 +207,26 @@ function useFontsReady() {
   return ready;
 }
 
+function usePageMeta(page) {
+  useEffect(() => {
+    if (!page) return undefined;
+    document.title = page.title;
+    const setContent = (selector, value) => {
+      const el = document.head.querySelector(selector);
+      if (el) el.setAttribute("content", value);
+    };
+    setContent('meta[name="description"]', page.description);
+    setContent('meta[property="og:title"]', page.title);
+    setContent('meta[property="og:description"]', page.description);
+    setContent('meta[property="og:url"]', canonicalFor(page));
+    setContent('meta[name="twitter:title"]', page.title);
+    setContent('meta[name="twitter:description"]', page.description);
+    const canonical = document.head.querySelector("link[rel='canonical']");
+    if (canonical) canonical.setAttribute("href", canonicalFor(page));
+    return undefined;
+  }, [page]);
+}
+
 /**
  * Runs pretext layout over TITLE_TEXT, using a narrower width for lines
  * whose vertical range overlaps the hero mark's bounding box (shrink-wrap).
@@ -266,104 +309,223 @@ function useWrappedTitle(containerWidth, fontsReady) {
   }, [containerWidth, fontsReady]);
 }
 
-function App() {
-  const reducedMotion = usePrefersReducedMotion();
-  useAnimatedFavicon(reducedMotion);
-  const fontsReady = useFontsReady();
+function SiteNav(props) {
+  const path = pageForPath(
+    typeof window !== "undefined" ? window.location.pathname : "/"
+  );
+  const currentId = path ? path.id : "";
 
+  return (
+    <header className="site-header">
+      {props.includeWordmark ? (
+        <a href="/" className="wordmark wordmark-link">
+          Wonderland Software
+        </a>
+      ) : null}
+      <nav className="site-nav" aria-label="Primary">
+        {PAGES.map((item) => (
+          <a
+            key={item.id}
+            href={item.href}
+            aria-current={item.id === currentId ? "page" : undefined}
+          >
+            {item.id === "home"
+              ? "Home"
+              : item.id === "about"
+                ? "About"
+                : item.id === "vibrate"
+                  ? "Vibrate"
+                  : "Contact"}
+          </a>
+        ))}
+      </nav>
+    </header>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      {FOOTER_LINKS.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={link.ariaLabel}
+        >
+          {link.label}
+        </a>
+      ))}
+    </footer>
+  );
+}
+
+function HomeHero() {
+  const fontsReady = useFontsReady();
   const titleRef = useRef(null);
   const titleWidth = useElementWidth(titleRef);
   const layout = useWrappedTitle(titleWidth, fontsReady);
-
-  const mailto = "mailto:tag@wonderland.software";
   const logoWidth = layout ? layout.logoWidth : VIBRATE_LOGO_W;
   const logoHeight = layout ? layout.logoHeight : VIBRATE_LOGO_H;
 
   return (
     <>
-    <BackgroundShader />
-    <BrushOverlay reducedMotion={reducedMotion} />
-    <div className="App">
-      <article className="page">
-        <div className="wordmark">
-          Wonderland Software
-          <span className="wordmark-location">Austin, Texas</span>
-        </div>
+      <div className="wordmark">
+        Wonderland Software
+        <span className="wordmark-location">Austin, Texas</span>
+      </div>
 
-        <h1
-          ref={titleRef}
-          className="hero-title"
-          aria-label={TITLE_TEXT}
-          style={
-            layout
-              ? {
-                  height: layout.totalHeight,
-                  fontSize: layout.fontSize,
-                  lineHeight: `${layout.lineHeight}px`,
-                  letterSpacing: `${layout.letterSpacingEm}em`,
-                }
-              : { minHeight: logoHeight }
-          }
+      <h1
+        ref={titleRef}
+        className="hero-title"
+        aria-label={TITLE_TEXT}
+        style={
+          layout
+            ? {
+                height: layout.totalHeight,
+                fontSize: layout.fontSize,
+                lineHeight: `${layout.lineHeight}px`,
+                letterSpacing: `${layout.letterSpacingEm}em`,
+              }
+            : { minHeight: logoHeight }
+        }
+      >
+        <div
+          className="rabbit-abs"
+          style={{
+            width: logoWidth,
+            height: logoHeight,
+          }}
         >
-          <div
-            className="rabbit-abs"
-            style={{
-              width: logoWidth,
-              height: logoHeight,
-            }}
-          >
-            <picture>
-              <source type="image/webp" srcSet={vibrateLogoWebp} />
-              <img
-                src={vibrateLogoPng}
-                alt="Vibrate logo"
-                width={Math.round(logoWidth)}
-                height={Math.round(logoHeight)}
-              />
-            </picture>
-          </div>
-          {layout ? (
-            <>
-              {layout.lines.map((line, i) => (
-                <div
-                  key={i}
-                  className="title-line"
-                  aria-hidden="true"
-                  style={{
-                    top: line.y,
-                    width: line.maxWidth,
-                  }}
-                >
-                  {line.text}
-                </div>
-              ))}
-            </>
-          ) : (
-            // Fallback while width/fonts are measuring, plain text
-            <span className="title-fallback">{TITLE_TEXT}</span>
-          )}
-        </h1>
-
-        {/*
-        <div className="clients">
-          <p className="clients-label">Trusted by</p>
-          <div className="clients-logos">
-            {CLIENTS.map((c) => (
-              <img key={c.name} src={c.logo} alt={c.name} className="client-logo" />
-            ))}
-          </div>
+          <picture>
+            <source type="image/webp" srcSet={vibrateLogoWebp} />
+            <img
+              src={vibrateLogoPng}
+              alt="Vibrate logo"
+              width={Math.round(logoWidth)}
+              height={Math.round(logoHeight)}
+            />
+          </picture>
         </div>
-        */}
+        {layout ? (
+          <>
+            {layout.lines.map((line, i) => (
+              <div
+                key={i}
+                className="title-line"
+                aria-hidden="true"
+                style={{
+                  top: line.y,
+                  width: line.maxWidth,
+                }}
+              >
+                {line.text}
+              </div>
+            ))}
+          </>
+        ) : (
+          <span className="title-fallback">{TITLE_TEXT}</span>
+        )}
+      </h1>
+    </>
+  );
+}
 
-        <div className="services">
+function HomePage() {
+  return (
+    <>
+      <HomeHero />
+      <p className="hero-note">
+        <a href="/vibrate/">About the Vibrate app</a>
+      </p>
+
+      <div className="clients">
+        <p className="clients-label">Trusted by</p>
+        <div className="clients-logos">
+          {CLIENTS.map((c) => (
+            <img key={c.name} src={c.logo} alt={c.name} className="client-logo" />
+          ))}
+        </div>
+      </div>
+
+      <ol className="services">
+        <li className="service">
+          <span className="service-num">01</span>
           <div className="service-body">
+            <h2 className="service-title">Strategy Conversations.</h2>
             <p>
-              Vibe-sharing: your current vibe, a place pin, ratings, and
-              friends.
+              Before anything gets built, we have a conversation. We sit down
+              with you to map what your business actually needs, and what it
+              doesn't.
             </p>
           </div>
-        </div>
+        </li>
 
+        <li className="service">
+          <span className="service-num">02</span>
+          <div className="service-body">
+            <h2 className="service-title">Design &amp; Development.</h2>
+            <p>
+              Web apps, mobile apps, and custom tools built to fit your
+              business. Thoughtfully designed, cleanly engineered, and shaped
+              around the way your team actually works.
+            </p>
+          </div>
+        </li>
+
+        <li className="service">
+          <span className="service-num">03</span>
+          <div className="service-body">
+            <h2 className="service-title">Integration &amp; Deployment.</h2>
+            <p>
+              From proof-of-concept to production, wired into the systems
+              and workflows you already rely on.
+            </p>
+          </div>
+        </li>
+      </ol>
+
+      <p className="footer-note">
+        Wonderland Software is a custom software studio based in Austin,
+        Texas, building web apps, mobile apps, AI agents, and Shopify
+        storefronts for teams here and anywhere else.
+      </p>
+    </>
+  );
+}
+
+function AboutPage() {
+  return (
+    <>
+      <h1 className="page-title">Tag Locklar</h1>
+      <div className="service-body">
+        <p>Tag Locklar is the founder of Wonderland Software.</p>
+      </div>
+    </>
+  );
+}
+
+function VibratePage() {
+  return (
+    <>
+      <h1 className="page-title">Vibrate</h1>
+      <picture className="product-mark">
+        <source type="image/webp" srcSet={vibrateLogoWebp} />
+        <img
+          src={vibrateLogoPng}
+          alt="Vibrate logo"
+          width="88"
+          height="77"
+        />
+      </picture>
+      <div className="service-body">
+        <p>
+          Share your current vibe with a place pin, ratings, and friends.
+        </p>
+        <p>Vibrate is an iOS app from Wonderland Software. It is on TestFlight.</p>
+      </div>
+      <div className="page-actions">
         <a
           href="https://vibrate.world"
           className="contact-btn"
@@ -373,13 +535,66 @@ function App() {
           visit vibrate.world
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
-        <br />
-        <a href={mailto} className="contact-btn">
+      </div>
+    </>
+  );
+}
+
+function ContactPage() {
+  return (
+    <>
+      <h1 className="page-title">Contact</h1>
+      <div className="service-body">
+        <p>Austin, TX</p>
+      </div>
+      <div className="page-actions">
+        <a href={MAILTO} className="contact-btn">
           email tag@wonderland.software
           <span className="contact-arrow" aria-hidden="true">→</span>
         </a>
-      </article>
-    </div>
+      </div>
+    </>
+  );
+}
+
+function MissingPage() {
+  return (
+    <>
+      <h1 className="page-title">Page not found.</h1>
+      <div className="service-body">
+        <p>That page does not exist.</p>
+      </div>
+    </>
+  );
+}
+
+const PAGE_VIEWS = {
+  home: HomePage,
+  about: AboutPage,
+  vibrate: VibratePage,
+  contact: ContactPage,
+};
+
+function App() {
+  const reducedMotion = usePrefersReducedMotion();
+  useAnimatedFavicon(reducedMotion);
+  const page = pageForPath(
+    typeof window !== "undefined" ? window.location.pathname : "/"
+  );
+  usePageMeta(page);
+  const View = page ? PAGE_VIEWS[page.id] : MissingPage;
+
+  return (
+    <>
+      <BackgroundShader />
+      <BrushOverlay reducedMotion={reducedMotion} />
+      <div className="App">
+        <article className={page && page.id === "home" ? "page page-home" : "page"}>
+          <SiteNav includeWordmark={!page || page.id !== "home"} />
+          <View />
+          <SiteFooter />
+        </article>
+      </div>
     </>
   );
 }

@@ -10,8 +10,8 @@ const app = (
   </React.StrictMode>
 );
 
-// `npm run build` prerenders the page into index.html so crawlers and AI
-// bots get real content without executing JS. When that markup is present we
+// `npm run build` prerenders each route into its own HTML file so crawlers
+// get real content without executing JS. When that markup is present we
 // hydrate it; otherwise (dev server) we do a normal client render.
 if (container.hasChildNodes()) {
   ReactDOM.hydrateRoot(container, app);
