@@ -44,16 +44,6 @@ const TITLE_FONT_FAMILY =
 
 const FOOTER_LINKS = [
   {
-    href: "https://vibrate.world/privacy",
-    label: "Privacy",
-    ariaLabel: "Privacy policy",
-  },
-  {
-    href: "https://vibrate.world/terms",
-    label: "Terms",
-    ariaLabel: "Terms of service",
-  },
-  {
     href: "https://x.com/getvibrate",
     label: "X",
     ariaLabel: "Vibrate on X",
@@ -449,6 +439,12 @@ function HomePage() {
         </div>
       </div>
 
+      <p className="footer-note">
+        Wonderland Software is a custom software studio based in Austin,
+        Texas, building web apps, mobile apps, AI agents, and Shopify
+        storefronts for teams here and anywhere else.
+      </p>
+
       <ol className="services">
         <li className="service">
           <span className="service-num">01</span>
@@ -485,12 +481,6 @@ function HomePage() {
           </div>
         </li>
       </ol>
-
-      <p className="footer-note">
-        Wonderland Software is a custom software studio based in Austin,
-        Texas, building web apps, mobile apps, AI agents, and Shopify
-        storefronts for teams here and anywhere else.
-      </p>
     </>
   );
 }
