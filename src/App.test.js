@@ -46,9 +46,19 @@ test('home keeps the Vibrate hero and restores studio content', () => {
   expect(screen.getByRole('heading', { name: 'Design & Development.' })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Integration & Deployment.' })).toBeInTheDocument();
   expect(screen.getByText(/what it doesn't/)).toBeInTheDocument();
+  const studio = screen.getByText(
+    /Wonderland Software is a custom software studio based in Austin,\s+Texas, building web apps, mobile apps, AI agents, and Shopify storefronts for teams here and anywhere else\./
+  );
+  expect(studio).toHaveClass('footer-note');
+  expect(document.querySelectorAll('.footer-note')).toHaveLength(1);
+  const logos = document.querySelector('.clients-logos');
+  const services = document.querySelector('.services');
   expect(
-    screen.getByText(/custom software studio based in Austin,\s+Texas/)
-  ).toBeInTheDocument();
+    logos.compareDocumentPosition(studio) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
+  expect(
+    studio.compareDocumentPosition(services) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
   expect(
     screen.queryByText('Wonderland Software is based in Austin, Texas.')
   ).not.toBeInTheDocument();
@@ -69,6 +79,9 @@ test('about is only the founder', () => {
   expect(screen.getByRole('heading', { name: 'Tag Locklar' })).toBeInTheDocument();
   expect(screen.getByText('Tag Locklar is the founder of Wonderland Software.')).toBeInTheDocument();
   expect(screen.queryByText('Trusted by')).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(/custom software studio based in Austin/)
+  ).not.toBeInTheDocument();
   expect(screen.queryByText(/place pin/)).not.toBeInTheDocument();
   expect(screen.queryByText('Austin, TX')).not.toBeInTheDocument();
   expect(document.title).toBe('Tag Locklar, founder | Wonderland Software');
@@ -112,14 +125,10 @@ test('shared nav and footer are real links on every page', () => {
   expect(screen.getByRole('link', { name: 'Vibrate' })).toHaveAttribute('href', '/vibrate/');
   expect(screen.getByRole('link', { name: 'Contact' })).toHaveAttribute('href', '/contact/');
 
-  const privacy = screen.getByRole('link', { name: 'Privacy policy' });
-  expect(privacy).toHaveAttribute('href', 'https://vibrate.world/privacy');
-  expect(privacy).toHaveAttribute('target', '_blank');
-  expect(privacy).toHaveAttribute('rel', 'noopener noreferrer');
-
-  const terms = screen.getByRole('link', { name: 'Terms of service' });
-  expect(terms).toHaveAttribute('href', 'https://vibrate.world/terms');
-  expect(terms).toHaveAttribute('rel', 'noopener noreferrer');
+  expect(screen.queryByRole('link', { name: 'Privacy policy' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Terms of service' })).not.toBeInTheDocument();
+  expect(document.querySelector('a[href*="vibrate.world/privacy"]')).toBeNull();
+  expect(document.querySelector('a[href*="vibrate.world/terms"]')).toBeNull();
 
   const x = screen.getByRole('link', { name: 'Vibrate on X' });
   expect(x).toHaveAttribute('href', 'https://x.com/getvibrate');

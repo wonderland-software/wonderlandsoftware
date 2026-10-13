@@ -13,6 +13,10 @@
 
 * {
   box-sizing: border-box;
+  /* Dragging paints the page background. Text selection steals that gesture,
+     so selection is off everywhere, including WebKit. */
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 html {
@@ -26,6 +30,18 @@ html, body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Editable fields stay selectable. Links and buttons are unaffected:
+   user-select does not change pointer events. */
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 body {
@@ -307,7 +323,7 @@ body {
 
 /* Clients logos */
 .clients {
-  margin: 3rem 0 2rem;
+  margin: 3rem 0 0;
 }
 
 .clients-label {
@@ -364,14 +380,16 @@ body {
   box-shadow: inset 0 0 0 2px var(--paper), 0 0 0 3px var(--ink);
 }
 
-/* Closing line. States plainly who this is, what they do and where, which is
-   the kind of sentence an AI answer engine can lift and attribute. */
+/* Studio line, directly under the trusted-by logos. States plainly who this
+   is, what they do and where, which is the kind of sentence an AI answer
+   engine can lift and attribute. */
 .footer-note {
-  margin: 2.5rem 0 0;
-  max-width: 38rem;
-  font-size: 0.92rem;
-  line-height: 1.65;
-  color: var(--muted);
+  margin: 1.35rem 0 0;
+  max-width: 40rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  letter-spacing: -0.012em;
+  color: var(--ink);
 }
 
 .contact-arrow {
@@ -444,7 +462,12 @@ html.reduce-motion .brush-overlay {
   }
 
   .clients {
-    margin: 1.5rem 0 1rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .footer-note {
+    margin-top: 1.1rem;
+    font-size: 1.05rem;
   }
 
   .clients-logos {

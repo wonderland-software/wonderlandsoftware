@@ -75,13 +75,16 @@ const PROOF = {
 };
 
 const SHARED_PROOF = [
-  "https://vibrate.world/privacy",
-  "https://vibrate.world/terms",
   "https://x.com/getvibrate",
   "https://www.instagram.com/getvibrate/",
   'rel="noopener noreferrer"',
   'aria-label="Vibrate on X"',
   'aria-label="Vibrate on Instagram"',
+];
+
+const SHARED_ABSENT = [
+  "vibrate.world/privacy",
+  "vibrate.world/terms",
   'aria-label="Privacy policy"',
   'aria-label="Terms of service"',
 ];
@@ -219,6 +222,12 @@ function assertProof(page, html) {
   if (missing.length) {
     throw new Error(
       `${page.path} is missing expected content: ${missing.join(" | ")}`
+    );
+  }
+  const present = SHARED_ABSENT.filter((s) => html.includes(s));
+  if (present.length) {
+    throw new Error(
+      `${page.path} still includes Vibrate-only footer links: ${present.join(" | ")}`
     );
   }
 }
