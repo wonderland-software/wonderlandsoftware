@@ -1,23 +1,9 @@
 /**
- * Prerender the built site into static HTML.
+ * Prerender each real route into its own static HTML file.
  *
- * Why: this is a Create React App SPA on GitHub Pages, so the shipped
- * index.html is an empty <div id="root">. Googlebot will eventually render
- * the JS, but Bing and the AI crawlers (GPTBot, ClaudeBot, PerplexityBot)
- * will not. Without this step the site is a blank page to all of them.
- *
- * How: serve build/ locally, load it in the Chrome already installed on this
- * machine with window.__PRERENDER__ set, and have the page POST its rendered
- * #root markup back to that server. Node writes the markup into
- * build/index.html; src/index.js sees it and hydrates instead of
- * client-rendering.
- *
- * The page pushes its own markup rather than us using Chrome's --dump-dom
- * because this app runs permanent requestAnimationFrame loops (the rabbit
- * sprite and the animated favicon). Those never go idle, so --dump-dom with
- * --virtual-time-budget spins forever instead of exiting.
- *
- * No puppeteer dependency, so no second Chromium download.
+ * GitHub Pages serves build/about/index.html at /about/ with a 200. There is
+ * no hash router and no 404.html rewrite. Crawlers that do not run JS still
+ * see the page text, title, description, canonical, and social tags.
  *
  * Usage: node scripts/prerender.mjs   (runs automatically via `npm run build`)
  */
@@ -28,6 +14,7 @@ import path from "node:path";
 import os from "node:os";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { PAGES, applyPageHead, pageForPath } from "../src/meta.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BUILD = path.join(ROOT, "build");
@@ -36,13 +23,15 @@ const POST_PATH = "/__prerender__";
 const TIMEOUT_MS = 60_000;
 
 const CHROME_CANDIDATES = [
+  process.env.CHROME_PATH,
   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   "/Applications/Chromium.app/Contents/MacOS/Chromium",
   "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
   "/usr/bin/google-chrome",
+  "/usr/bin/google-chrome-stable",
   "/usr/bin/chromium",
   "/usr/bin/chromium-browser",
-];
+].filter(Boolean);
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -60,10 +49,43 @@ const MIME = {
   ".map": "application/json; charset=utf-8",
 };
 
-// Runs before the app bundle, so the flag is set by the time React renders.
-// Then polls until React has committed and posts the markup back. Polling
-// rather than listening for `load` because React 18's root render is
-// scheduled, not synchronous, so it can commit after the load event.
+const PROOF = {
+  home: [
+    "Currently building Vibrate",
+    "Vibrate logo",
+    "Austin, Texas",
+    "About the Vibrate app",
+    "Trusted by",
+    "Strategy Conversations",
+    "Design &amp; Development",
+    "Integration &amp; Deployment",
+    "custom software studio",
+    "Meta",
+    "Servy",
+    "The Gear Room",
+    "MFJ",
+  ],
+  about: ["Tag Locklar", "founder of Wonderland Software"],
+  vibrate: [
+    "Share your current vibe with a place pin, ratings, and friends.",
+    "It is on TestFlight.",
+    "https://vibrate.world",
+  ],
+  contact: ["Austin, TX", "mailto:tag@wonderland.software", "email tag@wonderland.software"],
+};
+
+const SHARED_PROOF = [
+  "https://vibrate.world/privacy",
+  "https://vibrate.world/terms",
+  "https://x.com/getvibrate",
+  "https://www.instagram.com/getvibrate/",
+  'rel="noopener noreferrer"',
+  'aria-label="Vibrate on X"',
+  'aria-label="Vibrate on Instagram"',
+  'aria-label="Privacy policy"',
+  'aria-label="Terms of service"',
+];
+
 const INJECTED = `<script>
 window.__PRERENDER__ = true;
 (function () {
@@ -75,16 +97,17 @@ window.__PRERENDER__ = true;
     clearInterval(timer);
     fetch(${JSON.stringify(POST_PATH)}, {
       method: "POST",
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
-      body: done ? root.innerHTML : "__PRERENDER_EMPTY__"
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        path: location.pathname,
+        html: done ? root.innerHTML : ""
+      })
     });
   }, 25);
 })();
 </script>`;
 
 function findChrome() {
-  const fromEnv = process.env.CHROME_PATH;
-  if (fromEnv && fs.existsSync(fromEnv)) return fromEnv;
   const found = CHROME_CANDIDATES.find((p) => fs.existsSync(p));
   if (!found) {
     throw new Error(
@@ -94,7 +117,11 @@ function findChrome() {
   return found;
 }
 
-function startServer(indexHtml, onMarkup) {
+function isPageRequest(urlPath) {
+  return Boolean(pageForPath(urlPath));
+}
+
+function startServer(shellHtml, onMarkup) {
   const server = http.createServer((req, res) => {
     const urlPath = decodeURIComponent(new URL(req.url, "http://x").pathname);
 
@@ -103,19 +130,22 @@ function startServer(indexHtml, onMarkup) {
       req.on("data", (c) => chunks.push(c));
       req.on("end", () => {
         res.writeHead(204).end();
-        onMarkup(Buffer.concat(chunks).toString("utf8"));
+        try {
+          onMarkup(JSON.parse(Buffer.concat(chunks).toString("utf8")));
+        } catch (err) {
+          onMarkup({ path: "", html: "", error: err.message });
+        }
       });
       return;
     }
 
-    if (urlPath === "/" || urlPath === "/index.html") {
+    if (isPageRequest(urlPath)) {
       res.writeHead(200, { "Content-Type": MIME[".html"] });
-      res.end(indexHtml);
+      res.end(shellHtml);
       return;
     }
 
-    // Resolve inside build/ only — never serve outside it.
-    const filePath = path.join(BUILD, urlPath);
+    const filePath = path.normalize(path.join(BUILD, urlPath));
     if (
       !filePath.startsWith(BUILD + path.sep) ||
       !fs.existsSync(filePath) ||
@@ -132,7 +162,6 @@ function startServer(indexHtml, onMarkup) {
   });
 
   return new Promise((resolve) => {
-    // Port 0 lets the OS pick a free port, so parallel runs cannot collide.
     server.listen(0, "127.0.0.1", () => resolve(server));
   });
 }
@@ -143,6 +172,9 @@ function launchChrome(chrome, url) {
     chrome,
     [
       "--headless=new",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-gpu",
       `--user-data-dir=${userDataDir}`,
       "--no-first-run",
       "--no-default-browser-check",
@@ -162,12 +194,11 @@ function launchChrome(chrome, url) {
     child,
     getStderr: () => stderr,
     cleanup() {
-      // Chrome is long-lived by design here; we kill it once we have markup.
       try {
         child.kill("SIGKILL");
-      } catch {}
-      // Chrome can still be flushing its profile as we delete it, which throws
-      // ENOTEMPTY. Retry, and never let temp-dir cleanup fail the build.
+      } catch {
+        /* already gone */
+      }
       try {
         fs.rmSync(userDataDir, {
           recursive: true,
@@ -175,45 +206,46 @@ function launchChrome(chrome, url) {
           maxRetries: 5,
           retryDelay: 150,
         });
-      } catch {}
+      } catch {
+        /* profile cleanup is best-effort */
+      }
     },
   };
 }
 
-async function main() {
-  if (!fs.existsSync(INDEX)) {
-    throw new Error(`No build found at ${INDEX}. Run react-scripts build first.`);
-  }
-
-  const original = fs.readFileSync(INDEX, "utf8");
-
-  // Refuse to run twice over the same build rather than nesting markup.
-  if (!/<div id="root">\s*<\/div>/.test(original)) {
+function assertProof(page, html) {
+  const required = [...(PROOF[page.id] || []), ...SHARED_PROOF, `<title>${page.title}</title>`];
+  const missing = required.filter((s) => !html.includes(s));
+  if (missing.length) {
     throw new Error(
-      'build/index.html has no empty <div id="root"></div> to fill. ' +
-        "It is probably already prerendered; re-run `npm run build` from clean."
+      `${page.path} is missing expected content: ${missing.join(" | ")}`
     );
   }
+}
 
-  const chromePath = findChrome();
-  const served = original.replace("</head>", `${INJECTED}\n</head>`);
-
+async function prerenderOne(chromePath, port, page, original) {
   let resolveMarkup;
-  const markupPromise = new Promise((r) => (resolveMarkup = r));
-  const server = await startServer(served, resolveMarkup);
-  const { port } = server.address();
+  let rejectMarkup;
+  const markupPromise = new Promise((resolve, reject) => {
+    resolveMarkup = resolve;
+    rejectMarkup = reject;
+  });
+  pending = (payload) => {
+    if (!payload || payload.error) {
+      rejectMarkup(new Error(payload?.error || "Empty prerender payload"));
+      return;
+    }
+    resolveMarkup(payload);
+  };
 
-  const chrome = launchChrome(chromePath, `http://127.0.0.1:${port}/`);
-
+  const chrome = launchChrome(chromePath, `http://127.0.0.1:${port}${page.href}`);
   let timer;
   const timeout = new Promise((_, reject) => {
-    // Node-side timeout. Do not use GNU `timeout` here: it is absent on macOS
-    // and silently prevents Chrome from running at all.
     timer = setTimeout(
       () =>
         reject(
           new Error(
-            `Timed out after ${TIMEOUT_MS}ms waiting for the page to render.\n` +
+            `Timed out after ${TIMEOUT_MS}ms waiting for ${page.href} to render.\n` +
               chrome.getStderr().slice(-2000)
           )
         ),
@@ -222,43 +254,64 @@ async function main() {
   });
 
   try {
-    const markup = await Promise.race([markupPromise, timeout]);
-
-    if (!markup || markup === "__PRERENDER_EMPTY__") {
-      throw new Error("The app rendered nothing. It likely threw on boot.");
+    const payload = await Promise.race([markupPromise, timeout]);
+    const markup = payload.html || "";
+    if (!markup.trim()) {
+      throw new Error(`${page.href} rendered nothing. It likely threw on boot.`);
     }
-
-    // Guard: a silently-broken render would ship a blank page to every
-    // crawler, which is the exact failure this script exists to prevent.
-    const required = [
-      "Currently building",
-      "Vibrate",
-      "Austin, Texas",
-      "Vibrate logo",
-      "vibrate.world",
-      "tag@wonderland.software",
-    ];
-    const missing = required.filter((s) => !markup.includes(s));
-    if (missing.length) {
+    if (pageForPath(payload.path)?.id !== page.id) {
       throw new Error(
-        `Prerendered markup is missing expected content: ${missing.join(", ")}\n` +
-          `Got ${markup.length} bytes.`
+        `${page.href} posted markup for ${payload.path || "(no path)"} instead.`
       );
     }
 
-    const out = original.replace(
+    const out = applyPageHead(original, page).replace(
       /<div id="root">\s*<\/div>/,
       `<div id="root">${markup}</div>`
     );
-    if (out === original) throw new Error("Failed to inject markup into index.html");
+    if (!out.includes(markup.slice(0, 40))) {
+      throw new Error(`Failed to inject markup for ${page.href}`);
+    }
+    assertProof(page, out);
 
-    fs.writeFileSync(INDEX, out);
+    const dest = path.join(BUILD, page.outFile);
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.writeFileSync(dest, out);
     console.log(
-      `prerender: injected ${markup.length.toLocaleString()} bytes into build/index.html`
+      `prerender: wrote ${page.outFile} (${markup.length.toLocaleString()} bytes in #root)`
     );
   } finally {
     clearTimeout(timer);
     chrome.cleanup();
+    pending = () => {};
+  }
+}
+
+let pending = () => {};
+
+async function main() {
+  if (!fs.existsSync(INDEX)) {
+    throw new Error(`No build found at ${INDEX}. Run react-scripts build first.`);
+  }
+
+  const original = fs.readFileSync(INDEX, "utf8");
+  if (!/<div id="root">\s*<\/div>/.test(original)) {
+    throw new Error(
+      'build/index.html has no empty <div id="root"></div> to fill. ' +
+        "Re-run `npm run build` from a clean react-scripts build."
+    );
+  }
+
+  const chromePath = findChrome();
+  const shell = original.replace("</head>", `${INJECTED}\n</head>`);
+  const server = await startServer(shell, (payload) => pending(payload));
+  const { port } = server.address();
+
+  try {
+    for (const page of PAGES) {
+      await prerenderOne(chromePath, port, page, original);
+    }
+  } finally {
     server.close();
   }
 }
